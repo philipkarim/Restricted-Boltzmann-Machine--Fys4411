@@ -1,5 +1,5 @@
 # Fys4411-Computational physics II
-# Variational Monte Carlo for a Bosonic System
+# The Restricted Boltzmannn Machine Applied to a Quantum Many Body Problem
 ### University of Oslo
 
 Project 2 - Project on Restricted Boltzmannn Machine
