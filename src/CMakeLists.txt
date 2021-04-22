@@ -1,4 +1,4 @@
-project(project_1_fys4411)
+project(project_2_fys4411)
 
 # Set CXX standard to C++11
 set(CMAKE_CXX_STANDARD 11)
@@ -27,8 +27,8 @@ include_directories(
     .
     Hamiltonians
     InitialStates
-    Math
     WaveFunctions
+    Math
 )
 
 # Add sources from all directories
@@ -36,10 +36,11 @@ file(
     GLOB SOURCES "*.cpp"
     GLOB SOURCES "Hamiltonians/*.cpp"
     GLOB SOURCES "InitialStates/*.cpp"
-    GLOB SOURCES "Math/*.cpp"
     GLOB SOURCES "WaveFunctions/*.cpp"
+    GLOB SOURCES "Math/*.cpp"
+
 )
 
 
-# Create executable called "vmc"
-add_executable(vmc ${SOURCES})
+# Create executable called "rbm"
+add_executable(rbm ${SOURCES})

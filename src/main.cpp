@@ -26,7 +26,7 @@ int main() {
     double stepLength       = 0.5;          // Metropolis step length.
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
     bool check_step         = false;        // Simulating as function of step sizes
-    bool numeric            = true;         // True->Numeric differentiation, False->Analytic
+    bool numeric            = false;         // True->Numeric differentiation, False->Analytic
     bool bruteforce_val     = true;         // True->bruteforce, False->Importance sampling
     bool interaction        = false;        // True-> interaction, False->Not interaction
     bool GD                 = false;        // True-> gradient decent, False->Not gradietn decent
@@ -72,7 +72,7 @@ int main() {
     system->setGD                       (GD);
     system->setGDwtf                    (GDwtf);
     system->setgeneralwtf               (generalwtf);
-    
+
     //One body density values
     if(onebodydensity==true){
       double bucketSize = 0.01;
@@ -89,7 +89,7 @@ int main() {
 
         else{pid1=fork();if (pid1==0){system->setInitialState(new RandomUniform(system, 3, 10));
                               alpha = system->gradientDescent(0.7);}
-        
+
         else{pid2=fork();if (pid2==0){system->setInitialState(new RandomUniform(system, 3, 100));
                               alpha = system->gradientDescent(0.3);}
 
@@ -104,7 +104,7 @@ int main() {
       parameters[1] = beta;
       system->getWaveFunction()->setParameters(parameters);
       //system->runMetropolisSteps           (numberOfSteps);
-      } 
+      }
     }
 
     //Looking for the best step sizes by running the script in
@@ -139,7 +139,7 @@ int main() {
       //Else just run a regular simulation without GD or parallizisation
       system->runMetropolisSteps          (numberOfSteps);
     }
-  
+
 
     return 0;
 }
