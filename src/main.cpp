@@ -20,42 +20,12 @@ int main() {
     int numberOfParticles   = 1;            // Set amount of particles
     int numberOfSteps       = (int) pow(2,19); //Amount of metropolis steps
     double omega            = 1.0;          // Oscillator frequency.
-    double omega_z          = 1.0;          // Oscillator frequency z direction
-    double alpha            = 0.5;          // Variational parameter.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
-    double stepLength       = 0.5;          // Metropolis step length.
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
-    bool check_step         = false;        // Simulating as function of step sizes
-    bool numeric            = false;         // True->Numeric differentiation, False->Analytic
-    bool bruteforce_val     = true;         // True->bruteforce, False->Importance sampling
     bool interaction        = false;        // True-> interaction, False->Not interaction
-    bool GD                 = false;        // True-> gradient decent, False->Not gradietn decent
-    double initialAlpha     = 0.45;         // Initial alpha to start the gradient decent
-    bool collectresults     =false;         // True-> aquiring large amount of results in parallel
-    bool onebodydensity     =false;         // Extracting the positions to be used on the one body density
+    
     //Write to file
-    bool GDwtf             =false;          // GD-Write to file
     bool generalwtf        =false;          // General information- write to file
-    bool obdwtf            =false;          // One body density write to file
-
-    double beta, a_length;                  // Defined under
-    bool spherical;
-
-    //Just making it easier to switch between interacting and non interacting cases
-    if (interaction==true){
-      //a_length=0;                     // Without the Jastrow factor remove //
-      a_length=0.0043;                  // Trap length
-      beta=2.82843;                     // Beta value
-      spherical=false;                  // Trap symmetry
-    }
-    else{
-      a_length         =0.0;            // Trap length
-      beta             =1.0;            // Beta value
-      spherical=true;                   // Trap symmetry
-    }
-    if (spherical==true){
-      omega_z=omega;
-    }
 
     //Setting the different values defined higher in the code
     System* system = new System(seed);
