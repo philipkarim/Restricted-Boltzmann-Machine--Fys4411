@@ -57,24 +57,10 @@ void Sampler::sample(bool acceptedStep) {
 	  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
     time_sec += time_span.count();
 
-    
-
     //Saving values to be used in blocking
-    if (meanenergy_list.size()<pow(2,15)){
+    //Metropolis steps are 2^n, performs blocking on 2^(n-1) because of the equilibration factor
+    if (meanenergy_list.size()<m_system->getNumberOfMetropolisSteps()/2){
       meanenergy_list.push_back(localEnergy);
-    }
-    
-    //Looping over the particles in the different dimensions finding the
-    //parameters used in gradient decent
-    double beta_value =m_system->getWaveFunction()->getParameters()[1];
-    for (int i=0; i<m_system->getNumberOfParticles(); i++){
-        for (int dim=0; dim<m_system->getNumberOfDimensions()-1; dim++){
-            part=m_system->getParticles().at(i)->getPosition()[dim];
-            E_L_deriv -= part*part;
-        }
-        int dim = m_system->getNumberOfDimensions()-1;
-        part2=m_system->getParticles().at(i)->getPosition()[dim];
-        E_L_deriv -= part2*part2*beta_value;     //Think the instabillity is coming from here (fixed it?)
     }
 
     //Cumulating the energy
@@ -83,15 +69,6 @@ void Sampler::sample(bool acceptedStep) {
 
     //Used in variance
     m_cumulativeEnergy2+=(localEnergy*localEnergy);
-
-    //Used in the gradient decent calculations
-    m_cumulativeE_Lderiv+=E_L_deriv;
-    m_cumulativeE_Lderiv_expect+=E_L_deriv*localEnergy;
-
-    //Starting the one body density function
-    if (m_system->getObd()==true){
-      m_system->oneBodyDensity();
-      }
 
     if (acceptedStep){
         m_acceptedSteps++;
@@ -127,14 +104,7 @@ void Sampler::printOutputToTerminal() {
     cout << " Accepted step ratio : " << m_acceptRatio << endl;
     cout << endl;
 
-/*  
-    //Casually setting the mood if the code works for 1 particle in 1 dimension
-    double analytical_answer_1D_N_1=0.5;
-    if (m_energy==analytical_answer_1D_N_1){
-      system("open https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-      //system("open http://www.youtube.com/watch?v=Gs069dndIYk&t=0m50s");
-    }
-*/
+
 }
 
 void Sampler::computeAverages() {
@@ -164,25 +134,13 @@ void Sampler::writeToFile(){
   ofstream myfile, myfiletime;
   string folderpart1, folderpart2;
 
-  if (m_system->getBruteforce()==true){
-    folderpart1="Results/bruteforce/";
-  }
-  else {
-    folderpart1 ="Results/importancesampling/";
-  }
-
-  if (m_system->getNumeric()==true){
-    folderpart2="numeric/";
-  }
-  else {
-    folderpart2 ="analytic/";
-  }
+  folderpart1 ="Results/"+m_system->getSampleMethod()+"/";
 
   int parti= m_system->getNumberOfParticles();
   int dimen= m_system->getNumberOfDimensions();
 
-  std::string filename=folderpart1+folderpart2+"N="+std::to_string(parti)+"Dim="+std::to_string(dimen);
-  std::string filenametime=folderpart1+folderpart2+"time/"+"N="+std::to_string(parti)+"Dim="+std::to_string(dimen);
+  std::string filename=folderpart1+"N="+std::to_string(parti)+"Dim="+std::to_string(dimen);
+  std::string filenametime=folderpart1+"time/"+"N="+std::to_string(parti)+"Dim="+std::to_string(dimen);
 
   myfile.open(filename);
   myfiletime.open(filenametime);
@@ -202,52 +160,7 @@ void Sampler::writeToFile(){
 
 }
 
-//Gradient decent write to file
-void Sampler::writeToFileAlpha(){
-  cout<<"Derivative="<<Energy_Der2()<<endl;
-  ofstream myfile2;
-  string folderpart1, folderpart2, folderpart3;
 
-  if (m_system->getInteraction()==true){
-    folderpart1="Results/GDalpha/interact/";
-  }
-  else {
-    folderpart1="Results/GDalpha/noninteract/";
-  }
-
-  if (m_system->getBruteforce()==true){
-    folderpart2="bruteforce/";
-  }
-  else {
-    folderpart2 ="importancesampling/";
-  }
-
-  if (m_system->getNumeric()==true){
-    folderpart3="numeric/";
-  }
-  else {
-    folderpart3 ="analytic/";
-  }
-
-
-  int parti= m_system->getNumberOfParticles();
-  int dimen= m_system->getNumberOfDimensions();
-  double lastalpha =m_system->getWaveFunction()->getParameters()[0];
-  std::vector<double> alphas_list = m_system->get_GDalpha();
-  std::vector<double> energy_list = m_system->get_energyarr();
-
-  std::string filename=folderpart1+folderpart2+folderpart3+"N"+std::to_string(parti)+"Dim"+std::to_string(dimen)+std::to_string(lastalpha)+".txt";
-  myfile2.open(filename);
-  cout << "Alphas are being written to file.."<<endl;
-  for(int i=0; i<alphas_list.size(); i++){
-      myfile2<<alphas_list[i]<<" "<<energy_list[i]<<endl;
-  }
-  cout << "Done!"<<endl;
-  cout<<endl;
-
-  myfile2.close();
-
-}
 
 //Step sizes and time steps written to file
 void Sampler::writeToFileSteps(std::vector<int> steps_list, std::vector<double> meanEL_list){
@@ -277,41 +190,4 @@ void Sampler::writeToFileSteps(std::vector<int> steps_list, std::vector<double> 
 
   myfile4.close();
 
-}
-
-//One body density write to file
-void Sampler::writeToFileOBD(){
-  ofstream myfile3;
-  string folderpart1;
-
-  //Switch to getJastrow
-  if (m_system->getTraplength()==0){
-    folderpart1="Results/onebodydensity/nonjastrow/";
-  }
-  else {
-    folderpart1="Results/onebodydensity/jastrow/";
-  }
-
-  int parti= m_system->getNumberOfParticles();
-  int dimen= m_system->getNumberOfDimensions();
-  int s_bins=m_system->getBins();
-  double s_bucketSize=m_system->getBucketSize();
-  int s_steps=m_system->getNumberOfMetropolisSteps();
-  double s_fraction=m_system->getEquilibrationFraction();
-  //double alphi=m_system->getAlpha();
-  std::vector<int> s_histogram = m_system->getHistogram();
-
-  //std::string filename="datadump/test.txt";
-  std::string filename=folderpart1+"N"+std::to_string(parti)+"Dim"+std::to_string(dimen)+".txt";
-  myfile3.open(filename);
-  cout << "One body density is being written to file.."<<endl;
-
-  for(int i=0; i<s_bins; i++){
-    myfile3 << double(s_histogram[i]) /(parti*s_steps*s_fraction*s_bucketSize)
-    << "    " << i*s_bucketSize << endl;
-  }
-  cout << "Done!"<<endl;
-  cout<<endl;
-
-  myfile3.close();
 }
