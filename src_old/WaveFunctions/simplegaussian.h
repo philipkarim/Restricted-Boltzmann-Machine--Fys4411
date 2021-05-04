@@ -40,7 +40,7 @@ private:
     double m_nh;
     double m_initialization;
     double m_sigma;
-    string m_gaussian;
+    bool m_normaldistr;
 
     //Should this be here?
     //void setupInitialState();

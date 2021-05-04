@@ -17,8 +17,6 @@ int main() {
 
     // Seed for the random number generator
     int seed = 2021;
-    const char *sample_methods[3][20]= {"Brute force", "Importance sampling", "Gibbs"};
-    const char *distribution_type[2][10]= {"normal", "uniform"};
 
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
@@ -26,8 +24,8 @@ int main() {
     int cycles_RBM          =30;
     int hidden_nodes        =1;
     int visible_nodes       =1;
-    int sampler_method      = 0;
-    int distribution        = 0;
+    int sampler_method      = 1;            //1=BF, 2=IS, 3=GS
+    bool uniform_distr      = 0;            //0=Normal, 1=Uniform
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
@@ -41,12 +39,12 @@ int main() {
     //Setting the different values defined higher in the code
     System* system = new System(seed);
     system->setHamiltonian              (new HarmonicOscillator(system, omega));
-    system->setWaveFunction             (new SimpleGaussian(system, hidden_nodes, visible_nodes, numberOfParticles, numberOfDimensions, sigma_val, distribution_type[distribution], initialization));
+    system->setWaveFunction             (new SimpleGaussian(system, hidden_nodes, visible_nodes, numberOfParticles, numberOfDimensions, sigma_val, uniform_distr, initialization));
     //system->setOptimizer                (new StochasticGradientDescent(system, b));
     system->setStepLength               (stepLength);
     system->setTimeStep                 (timeStep);
     system->setEquilibrationFraction    (equilibration);
-    system->setSampleMethod            (sample_methods[sampler_method]);
+    system->setSampleMethod             (sampler_method);
     system->setInteraction              (interaction);
     system->setgeneralwtf               (generalwtf);
     system->runMetropolisSteps          (cycles_RBM, numberOfSteps);
