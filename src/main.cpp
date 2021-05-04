@@ -23,9 +23,9 @@ int main() {
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
     int numberOfSteps       = (int) pow(2,19); //Amount of metropolis steps
-    int cycles_RBM          =30
-    int hidden_nodes        =1
-    int visible_nodes       =1
+    int cycles_RBM          =30;
+    int hidden_nodes        =1;
+    int visible_nodes       =1;
     int sampler_method      = 0;
     int distribution        = 0;
     double omega            = 1.0;          // Oscillator frequency.
@@ -42,11 +42,11 @@ int main() {
     System* system = new System(seed);
     system->setHamiltonian              (new HarmonicOscillator(system, omega));
     system->setWaveFunction             (new SimpleGaussian(system, hidden_nodes, visible_nodes, numberOfParticles, numberOfDimensions, sigma_val, distribution_type[distribution], initialization));
-    system->setOptimizer                (new StochasticGradientDescent(system, b));
+    //system->setOptimizer                (new StochasticGradientDescent(system, b));
     system->setStepLength               (stepLength);
     system->setTimeStep                 (timeStep);
     system->setEquilibrationFraction    (equilibration);
-    system->setSample_method            (sample_methods[sampler_method])
+    system->setSampleMethod            (sample_methods[sampler_method])
     system->setInteraction              (interaction);
     system->setgeneralwtf               (generalwtf);
     system->runMetropolisSteps          (cycles_RBM, numberOfSteps);

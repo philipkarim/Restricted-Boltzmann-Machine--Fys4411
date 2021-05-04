@@ -34,7 +34,7 @@ double SimpleGaussian::evaluate(std::vector<double> position) {
 
 
     //Return a double value
-    return 1.
+    return 1.;
 }
 
 void SimpleGaussian::setupInitialState(){
@@ -45,12 +45,12 @@ double SimpleGaussian::computeDoubleDerivative(std::vector<double> position) {
      //Computes the value of the analytical double derivative for the non interacting case. 
 
     //Return a double value
-    return 1.
+    return 1.;
   }
 
 double SimpleGaussian::computeDerivative(std::vector<double> position) {
      //Computes the value of the analytical derivative 
 
     //Return a double value
-    return 1.0
+    return 1.0;
   }

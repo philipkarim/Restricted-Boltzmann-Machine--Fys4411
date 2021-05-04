@@ -39,8 +39,8 @@ public:
     int getRBMCycles()                  { return m_RBMCycles; }
     double getEquilibrationFraction()   { return m_equilibrationFraction; }
     
-    void setSampleMethod                (string sampleMethod);
-    string getSampleMethod()             {return m_sampleMethod;}
+    void setSampleMethod                (char sampleMethod);
+    char getSampleMethod()             {return m_sampleMethod;}
 
     void setTimeStep                    (double timeStep);
     double getTimeStep()                {return m_timeStep;}
@@ -75,7 +75,7 @@ private:
 
 
    //Just some variables, mostly bools
-    string m_sampleMethod;
+    char m_sampleMethod;
     double m_stepLength=0.5;   //It said=0.1
     double m_timeStep=0.25;
     bool m_interaction;

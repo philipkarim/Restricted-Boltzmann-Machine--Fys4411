@@ -27,7 +27,7 @@ double HarmonicOscillator::computeLocalEnergy(std::vector<double> X_visible) {
     if (m_system->getInteraction()==false){
 
     //Computing the kinetic energy
-    kineticEnergy=m_system->getWaveFunction()->computeDoubleDerivative();
+    //kineticEnergy=m_system->getWaveFunction()->computeDoubleDerivative();
 
     potentialEnergy=computePotentialEnergy(X_visible);
 
@@ -37,7 +37,7 @@ double HarmonicOscillator::computeLocalEnergy(std::vector<double> X_visible) {
     else{
       cout<<"Interacting energy not done";
     
-    return
+    return 1.;
     }
   
   }

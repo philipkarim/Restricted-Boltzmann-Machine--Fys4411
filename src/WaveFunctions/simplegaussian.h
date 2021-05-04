@@ -11,12 +11,12 @@ public:
     double computeDoubleDerivative(std::vector<double> position);
     double computeDerivative(std::vector<double> position);
 
-    std::vector<double> set_X(std::vector<double> X){ m_x = X; }
-    std::vector<double> set_h(std::vector<double> h){ m_h = h; }
-    std::vector<double> set_a(std::vector<double> a){ m_a = a; }
-    std::vector<double> set_b(std::vector<double> b){ m_b = b; }
+    void set_X(std::vector<double> X){ m_x = X; }
+    void set_h(std::vector<double> h){ m_h = h; }
+    void set_a(std::vector<double> a){ m_a = a; }
+    void set_b(std::vector<double> b){ m_b = b; }
     //This is also a matrix 
-    std::vector<double> set_w(std::vector<double> w) {m_w = w; }
+    void set_w(std::vector<double> w) {m_w = w; }
 
     std::vector<double> get_X(){ return m_x; }
     std::vector<double> get_h(){ return m_h; }
@@ -40,7 +40,7 @@ private:
     double m_nh;
     double m_initialization;
     double m_sigma;
-    string m_gaussian;
+    char m_gaussian;
 
     //Should this be here?
     //void setupInitialState();

@@ -78,7 +78,6 @@ void Sampler::printOutputToTerminal() {
     int     np = m_system->getNumberOfParticles();
     int     nd = m_system->getNumberOfDimensions();
     int     ms = m_system->getNumberOfMetropolisSteps();
-    int     p  = m_system->getWaveFunction()->getNumberOfParameters();
     double  ef = m_system->getEquilibrationFraction();
     std::vector<double> pa = m_system->getWaveFunction()->getParameters();
 
@@ -158,8 +157,7 @@ void Sampler::writeToFile(){
 
 }
 
-
-
+/*
 //Step sizes and time steps written to file
 void Sampler::writeToFileSteps(std::vector<int> steps_list, std::vector<double> meanEL_list){
   ofstream myfile4;
@@ -189,3 +187,4 @@ void Sampler::writeToFileSteps(std::vector<int> steps_list, std::vector<double> 
   myfile4.close();
 
 }
+*/

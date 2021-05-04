@@ -6,16 +6,16 @@ class WaveFunction {
 public:
     WaveFunction(class System* system);
 
-    double evaluate(std::vector<double> position)=0;
-    double setupInitialState()=0;
-    double computeDoubleDerivative(std::vector<double> position)=0;
-    double computeDerivative(std::vector<double> position)=0;
+    double evaluate(std::vector<double> position);
+    void setupInitialState();
+    double computeDoubleDerivative(std::vector<double> position);
+    double computeDerivative(std::vector<double> position);
 
-    virtual std::vector<double> set_X(std::vector<double> X)=0;
-    virtual std::vector<double> set_h(std::vector<double> h)=0;
-    virtual std::vector<double> set_a(std::vector<double> a)=0;
-    virtual std::vector<double> set_b(std::vector<double> b)=0;
-    virtual std::vector<double> set_w(std::vector<double> w)=0;
+    virtual void set_X(std::vector<double> X)=0;
+    virtual void set_h(std::vector<double> h)=0;
+    virtual void set_a(std::vector<double> a)=0;
+    virtual void set_b(std::vector<double> b)=0;
+    virtual void set_w(std::vector<double> w)=0;
 
     virtual std::vector<double> get_X()=0;
     virtual std::vector<double> get_h()=0;
@@ -24,7 +24,7 @@ public:
     //This is actually a matrix. Use armadillo or eigen maybe?
     virtual std::vector<double> get_w()=0;
 
-    virtual void setupInitialState();
+    //virtual void setupInitialState();
 
 
 //private:
