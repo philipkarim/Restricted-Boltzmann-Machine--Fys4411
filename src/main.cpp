@@ -46,7 +46,7 @@ int main() {
     system->setStepLength               (stepLength);
     system->setTimeStep                 (timeStep);
     system->setEquilibrationFraction    (equilibration);
-    system->setSampleMethod            (sample_methods[sampler_method])
+    system->setSampleMethod            (sample_methods[sampler_method]);
     system->setInteraction              (interaction);
     system->setgeneralwtf               (generalwtf);
     system->runMetropolisSteps          (cycles_RBM, numberOfSteps);

@@ -79,7 +79,6 @@ void Sampler::printOutputToTerminal() {
     int     nd = m_system->getNumberOfDimensions();
     int     ms = m_system->getNumberOfMetropolisSteps();
     double  ef = m_system->getEquilibrationFraction();
-    std::vector<double> pa = m_system->getWaveFunction()->getParameters();
 
     cout << endl;
     cout << "  -- System info -- " << endl;
