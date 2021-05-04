@@ -44,11 +44,13 @@ void Sampler::sample(bool acceptedStep) {
     }
 
 
-    
+    double E_L_deriv=0;
+    double part, part2;
     //Starting the clock
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     //Calculating the local energy
-    double localEnergy; //= m_system->getHamiltonian()->computeLocalEnergy(hidden_nodes_maybe);
+    double localEnergy = m_system->getHamiltonian()->
+                         computeLocalEnergy(m_system->getParticles());
 
    //Stopping the clock, adding the time together for each energy cycle
     high_resolution_clock::time_point t2 = high_resolution_clock::now();

@@ -24,7 +24,7 @@ public:
     //This is actually a matrix. Use armadillo or eigen maybe?
     virtual std::vector<double> get_w()=0;
 
-    virtual void setupInitialState();
+    virtual void setupInitialState() = 0;
 
 
 //private:

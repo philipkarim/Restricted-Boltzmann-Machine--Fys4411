@@ -2,6 +2,7 @@
 #include <cassert>
 #include <iostream>
 #include "../system.h"
+#include "../particle.h"
 #include "../WaveFunctions/wavefunction.h"
 
 #include <vector>
@@ -46,7 +47,7 @@ double HarmonicOscillator::computePotentialEnergy(std::vector<double> X_visible)
   //Done
 
   //Potential energy noninteracting case
-  int numberVN=0; //= m_system->getNumberVisibleNodes();
+  int numberVN = m_system->getNumberVisibleNodes();
   //Defining some variables to be used later
   double potentialEnergy=0;
     
