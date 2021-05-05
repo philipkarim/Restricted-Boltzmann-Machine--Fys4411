@@ -26,27 +26,45 @@ RandomUniform::RandomUniform(System*    system,
 }
 
 void RandomUniform::setupInitialState() {
-    //Module to genrate the random numbers for placement of particles
-    std::random_device rd;
-    std::mt19937_64 gen(rd());
+    m_x.zeros(m_nv);
+    m_h.zeros(m_nh);
+    m_a.zeros(m_nv);
+    m_b.zeros(m_nh);
+    m_w.zeros(m_nv, m_nh);
 
-    // Set up the distribution for x \in [[0, 1],(can use multiple configurations)
-    std::uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
+    std::uniform_real_distribution<double> uniform_weights(-m_initialization, m_initialization);
+    std::uniform_real_distribution<double> uniform_position(-0.5, 0.5);
+    std::normal_distribution<double> normal_weights(0, m_initialization);
 
-    //Looping over the dimensions and particles initializing each
-    //particle with a random placement using a uniform distribution
-    for (int i=0; i < m_numberOfParticles; i++) {
-        std::vector<double> position = std::vector<double>();
-
-        for (int dim=0; dim < m_numberOfDimensions; dim++) {
-             // This is where the particles are placed in positions
-             // using the uniform generator
-             double temp_pos=(UniformNumberGenerator(gen) - 0.5);
-             position.push_back(temp_pos);
+    // initialize weights according to either a uniform or gaussian distribution
+    if (m_normaldistr == 0){
+        for (int i=0; i<m_nv; i++){
+            m_a[i] = uniform_weights(m_randomEngine);
+            for (int j=0; j<m_nh; j++){
+                m_w(i, j) = uniform_weights(m_randomEngine);
+            }
         }
-        //Setting the number of dimensions and appending new particle postions
-        m_particles.push_back(new Particle());
-        m_particles[i]->setNumberOfDimensions(m_numberOfDimensions);
-        m_particles[i]->setPosition(position);
+
+        for (int j=0; j<m_nh; j++){
+            m_b[j] = uniform_weights(m_randomEngine);
+        }
     }
+
+    else if (m_normaldistr == 1){
+        for (int i=0; i<m_nv; i++){
+            m_a[i] = normal_weights(m_randomEngine);
+            for (int j=0; j<m_nh; j++){
+                m_w(i, j) = normal_weights(m_randomEngine);
+            }
+        }
+
+        for (int j=0; j<m_nh; j++){
+            m_b[j] = normal_weights(m_randomEngine);
+        }
+    }
+
+    for (int i=0; i<m_nv; i++){
+        m_x[i] = uniform_position(m_randomEngine);
+    }
+
 }

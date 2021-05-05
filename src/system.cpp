@@ -28,39 +28,20 @@ bool System::metropolisStep() {
     // amount, and checks if the step is accepted by the Metropolis test
     
     // Defining some variables to be used
-     int random_index;
-     double psi_factor, step;
-     double wfold=m_waveFunction->evaluate(m_particles);
-     std::vector<double> PositionOld=std::vector<double>();
-
+    double psi_factor=0;
      //Random integer generator
      std::random_device rd;
      std::mt19937_64 gen(rd());
      std::uniform_int_distribution<int> distribution(0,m_numberOfParticles-1);
      std::uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
 
-     //Random index used to choose a random particle
-     random_index=distribution(gen);
-     //Defining the random particle:
-     PositionOld=m_particles[random_index]->getPosition();
-
-     //Start the step which gives movement to the particle
-     for (int dim=0; dim<m_numberOfDimensions; dim++){
-        step=m_stepLength*(UniformNumberGenerator(gen)-0.5);
-        m_particles[random_index]->adjustPosition(step, dim);
-     }
-
-     //Extracting the new wavefunction, and checks if it is accepted
-     double wfnew=m_waveFunction->evaluate(m_particles);
-     psi_factor=wfnew*wfnew/(wfold*wfold);
      
      //Checks if the move is accepted:
      if (UniformNumberGenerator(gen)<=psi_factor){
-        wfold=wfnew;
         return true;
      }
      else{
-         m_particles[random_index]->setPosition(PositionOld);
+         //m_particles[random_index]->setPosition(PositionOld);
         return false;
       }
 }
@@ -71,7 +52,7 @@ bool System::metropolisStepImportanceSampling() {
     // by a random amount, and checks if the step is accepted by the 
     //Metropolis-Hastings test
     
-    return true
+    return true;
 
 }
 
@@ -81,12 +62,11 @@ bool System::GibbsSampling() {
     // by a random amount, and checks if the step is accepted by the 
     //Metropolis-Hastings test
     
-    return true
+    return true;
 
 }
 
 void System::runMetropolisSteps(int RBMCycles, int numberOfMetropolisSteps) {
-    m_particles                 = m_initialState->getParticles();
     m_sampler                   = new Sampler(this);
     m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
     m_RBMCycles                 = RBMCycles;
@@ -97,12 +77,12 @@ void System::runMetropolisSteps(int RBMCycles, int numberOfMetropolisSteps) {
     //for either the Metroopolis algorithm or the
     //Metropolis-Hastings algorithm
     for (int i=0; i < numberOfMetropolisSteps; i++) {
-      if (m_sampleMethod=="Brute Force"){
+      if (m_sampleMethod==0){
         acceptedStep = metropolisStep();}
-      else if(m_sampleMethod=="Importance Sampling"){
+      else if(m_sampleMethod==1){
         acceptedStep = metropolisStepImportanceSampling();
       }
-      else if(m_sampleMethod=="Gibbs Sampling"){
+      else if(m_sampleMethod==2){
         acceptedStep = metropolisStepImportanceSampling();
       }
       else{
@@ -153,7 +133,7 @@ void System::setWaveFunction(WaveFunction* waveFunction) {
     m_waveFunction = waveFunction;
 }
 
-void System::setSampleMethod(string sampleMethod) {
+void System::setSampleMethod(int sampleMethod) {
     m_sampleMethod = sampleMethod;
 }
 
@@ -170,9 +150,9 @@ void System::setgeneralwtf(bool generalwtf) {
 }
 
 void System::setNumberParticles(int numberOfParticles) {
-    m_numberParticles = numberOfParticles;
+    m_numberOfParticles = numberOfParticles;
 }
 
 void System::setNumberDimensions(int numberOfDimensions) {
-    m_numberDimensions = numberOfDimensions;
+    m_numberOfDimensions = numberOfDimensions;
 }

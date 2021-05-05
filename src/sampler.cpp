@@ -75,23 +75,17 @@ void Sampler::sample(bool acceptedStep) {
 }
 
 void Sampler::printOutputToTerminal() {
-    int     np = m_system->getNumberOfParticles();
-    int     nd = m_system->getNumberOfDimensions();
+    //int     np = m_system->getNumberOfParticles();
+    //int     nd = m_system->getNumberOfDimensions();
     int     ms = m_system->getNumberOfMetropolisSteps();
     double  ef = m_system->getEquilibrationFraction();
 
     cout << endl;
     cout << "  -- System info -- " << endl;
-    cout << " Number of particles  : " << np << endl;
-    cout << " Number of dimensions : " << nd << endl;
+    //cout << " Number of particles  : " << np << endl;
+    //cout << " Number of dimensions : " << nd << endl;
     cout << " Number of Metropolis steps run : 10^" << std::log10(ms) << endl;
     cout << " Number of equilibration steps  : 10^" << std::log10(std::round(ms*ef)) << endl;
-    cout << endl;
-    cout << "  -- Wave function parameters -- " << endl;
-    cout << " Number of parameters : " << p << endl;
-    for (int i=0; i < p; i++) {
-        cout << " Parameter " << i+1 << " : " << pa.at(i) << endl;
-    }
     cout << endl;
     cout << "  -- Results -- " << endl;
     cout << " CPU time: " << time_sec << " s" << endl;
@@ -128,9 +122,21 @@ double Sampler::computeVariance(std::vector<double> x_sample, double x_mean){
 //Benchmarking results
 void Sampler::writeToFile(){
   ofstream myfile, myfiletime;
-  string folderpart1, folderpart2;
+  string folderpart1, folderpart2, method;
 
-  folderpart1 ="Results/"+m_system->getSampleMethod()+"/";
+  int sample_method=m_system->getSampleMethod();
+
+  if (sample_method==0){
+    method="bruteforce";
+  }
+  else if (sample_method==1){
+    method="importance";
+  }
+  else{
+    method="gibbs";
+  }
+
+  folderpart1 ="Results/"+method+"/";
 
   int parti= m_system->getNumberOfParticles();
   int dimen= m_system->getNumberOfDimensions();
