@@ -39,7 +39,8 @@ int main() {
     //Setting the different values defined higher in the code
     System* system = new System(seed);
     system->setHamiltonian              (new HarmonicOscillator(system, omega));
-    system->setWaveFunction             (new SimpleGaussian(system, hidden_nodes, visible_nodes, numberOfParticles, numberOfDimensions, sigma_val, uniform_distr, initialization));
+    system->setWaveFunction             (new SimpleGaussian(system, numberOfParticles, numberOfDimensions, sigma_val));
+    system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes, uniform_distr, initialization));
     //system->setOptimizer                (new StochasticGradientDescent(system, b));
     system->setStepLength               (stepLength);
     system->setTimeStep                 (timeStep);

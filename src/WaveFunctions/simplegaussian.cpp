@@ -9,23 +9,12 @@
 #include <vector>
 
 using namespace std;
-SimpleGaussian::SimpleGaussian(System* system, int n_hidden, int n_visible, int part, int dim, double sigma, bool gaussian, double initialization) :
+SimpleGaussian::SimpleGaussian(System* system, int part, 
+                                int dim, double sigma) :
         WaveFunction(system) {
-    assert(n_hidden >= 0);
-    assert(n_visible >= 0);
-    m_nh = n_hidden;
-    m_nv = n_visible;
     m_sigma = sigma;
-    m_gaussian = gaussian;
-    m_initialization = initialization;
-
-    m_system->setNumberHiddenNodes(n_hidden);
-    m_system->setNumberVisibleNodes(n_visible);
     m_system->setNumberParticles(part);
     m_system->setNumberDimensions(dim);
-
-    //Initialize 
-    setupInitialState();
 
 }
 
@@ -35,10 +24,6 @@ double SimpleGaussian::evaluate(std::vector<double> position) {
 
     //Return a double value
     return 1.;
-}
-
-void SimpleGaussian::setupInitialState(){
-
 }
 
 double SimpleGaussian::computeDoubleDerivative(std::vector<double> position) {
