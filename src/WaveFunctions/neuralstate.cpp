@@ -1,4 +1,4 @@
-#include "simplegaussian.h"
+#include "neuralstate.h"
 #include <cmath>
 #include <cassert>
 #include "wavefunction.h"
@@ -9,7 +9,7 @@
 #include <armadillo>
 
 using namespace std;
-SimpleGaussian::SimpleGaussian(System* system, int part, 
+NeuralState::NeuralState(System* system, int part, 
                                 int dim, double sigma) :
         WaveFunction(system) {
     m_sigma = sigma;
@@ -18,7 +18,7 @@ SimpleGaussian::SimpleGaussian(System* system, int part,
 
 }
 
-double SimpleGaussian::evaluate(arma::vec position) {
+double NeuralState::evaluate(arma::vec position) {
      //Implementation of wavefunction at the given position
 
 
@@ -26,14 +26,14 @@ double SimpleGaussian::evaluate(arma::vec position) {
     return 1.;
 }
 
-double SimpleGaussian::computeDoubleDerivative(arma::vec position) {
+double NeuralState::computeDoubleDerivative(arma::vec position) {
      //Computes the value of the analytical double derivative for the non interacting case. 
 
     //Return a double value
     return 1.;
   }
 
-double SimpleGaussian::computeDerivative(arma::vec position) {
+double NeuralState::computeDerivative(arma::vec position) {
      //Computes the value of the analytical derivative 
 
     //Return a double value

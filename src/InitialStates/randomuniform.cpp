@@ -26,8 +26,8 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
      * nodes and the number of the distribution used. To make sure everything
      * works as intended, this information is passed to the system here.
      */
-    m_system->setNumberHiddenNodes(n_hidden);
-    m_system->setNumberVisibleNodes(n_visible);
+    m_system->setNumberOfHN(n_hidden);
+    m_system->setNumberOfVN(n_visible);
 
     setupInitialState();
 }

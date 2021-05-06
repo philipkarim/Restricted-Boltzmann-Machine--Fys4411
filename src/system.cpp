@@ -6,8 +6,9 @@
 #include "Hamiltonians/hamiltonian.h"
 #include "InitialStates/initialstate.h"
 #include <iostream>
+#include "SGD.h"
 
-#include "WaveFunctions/simplegaussian.h"
+#include "WaveFunctions/neuralstate.h"
 
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
 
@@ -66,17 +67,24 @@ bool System::GibbsSampling() {
 
 }
 
-void System::runMetropolisSteps(int RBMCycles, int numberOfMetropolisSteps) {
+void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
     m_sampler                   = new Sampler(this);
     m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
     m_RBMCycles                 = RBMCycles;
     m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
+
+    for (int rbm_cycle=0; rbm_cycle<RBMCycles; rbm_cycle++){
+        runMetropolisSteps();
+    }
+
+
+}
+void System::runMetropolisSteps() {
     bool acceptedStep;
     
     //Looping over the amount of metropolis steps
-    //for either the Metroopolis algorithm or the
-    //Metropolis-Hastings algorithm
-    for (int i=0; i < numberOfMetropolisSteps; i++) {
+    //for either of the sampling methods
+    for (int i=0; i < m_numberOfMetropolisSteps; i++) {
       if (m_sampleMethod==0){
         acceptedStep = metropolisStep();}
       else if(m_sampleMethod==1){
@@ -92,7 +100,7 @@ void System::runMetropolisSteps(int RBMCycles, int numberOfMetropolisSteps) {
 
       //If statement to send the accepted steps into the sampler
       //after the system is at rest
-      if (i>=numberOfMetropolisSteps*m_equilibrationFraction){
+      if (i>=m_numberOfMetropolisSteps*m_equilibrationFraction){
         m_sampler->sample(acceptedStep);
       }
     //cout<<"The current step is "<<i<<endl;
@@ -136,7 +144,11 @@ void System::setWaveFunction(WaveFunction* waveFunction) {
 void System::setInitialState(InitialState* initialState) {
     m_initialState = initialState;
 }
-
+/*
+void System::setOptimizer(SGD* learningRate) {
+    m_learningRate = learningRate;
+}
+*/
 void System::setSampleMethod(int sampleMethod) {
     m_sampleMethod = sampleMethod;
 }
@@ -159,4 +171,16 @@ void System::setNumberParticles(int numberOfParticles) {
 
 void System::setNumberDimensions(int numberOfDimensions) {
     m_numberOfDimensions = numberOfDimensions;
+}
+
+void System::setLearningRate(double learningRate) {
+    m_learningRate = learningRate;
+}
+
+void System::setNumberOfHN(int n_hidden){ 
+    m_numberOfHN = n_hidden; 
+}
+
+void System::setNumberOfVN(int n_visible){ 
+    m_numberOfVN = n_visible; 
 }

@@ -3,9 +3,9 @@
 #include <iostream>
 #include <armadillo>
 
-class SimpleGaussian : public WaveFunction {
+class NeuralState : public WaveFunction {
 public:
-    SimpleGaussian(class System* system, int part, int dim, double sigma);
+    NeuralState(class System* system, int part, int dim, double sigma);
     double evaluate(arma::vec position);
     double computeDoubleDerivative(arma::vec position);
     double computeDerivative(arma::vec position);
