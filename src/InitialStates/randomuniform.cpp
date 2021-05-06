@@ -4,11 +4,13 @@
 #include <cassert>
 #include "../particle.h"
 #include "../system.h"
+#include "../WaveFunctions/wavefunction.h"
 
-#include <Eigen>
-
+//#include <Eigen/Dense>
+#include<armadillo>
 using namespace std;
-using namespace Eigen
+using namespace arma;
+//using namespace Eigen
 RandomUniform::RandomUniform(System* system, int n_hidden, 
                             int n_visible, bool gaussian, 
                             double initialization):
@@ -31,45 +33,49 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
 }
 
 void RandomUniform::setupInitialState() {
-    initial_x.zeros(m_nv,0.0);
+    initial_x.zeros(m_nv);
     initial_h.zeros(m_nh);
     initial_a.zeros(m_nv);
     initial_b.zeros(m_nh);
     initial_w.zeros(m_nv, m_nh);
 
+    random_device rd;
+    mt19937_64 gen(rd());
+
+    // Set up the distribution for x \in [[x, x],(can use multiple configurations)
+    uniform_real_distribution<double> UniformNumberGenerator(-0.5,0.5);
     uniform_real_distribution<double> uniform_weights(-m_initialization, m_initialization);
-    uniform_real_distribution<double> uniform_position(-0.5, 0.5);
     normal_distribution<double> normal_weights(0, m_initialization);
 
     // initialize weights according to either a uniform or gaussian distribution
     if (m_normaldistr == 0){
         for (int i=0; i<m_nv; i++){
-            initial_a[i] = uniform_weights(m_randomEngine);
+            initial_a[i] = uniform_weights(gen);
             for (int j=0; j<m_nh; j++){
-                initial_w(i, j) = uniform_weights(m_randomEngine);
+                initial_w(i, j) = uniform_weights(gen);
             }
         }
 
         for (int j=0; j<m_nh; j++){
-            initial_b[j] = uniform_weights(m_randomEngine);
+            initial_b[j] = uniform_weights(gen);
         }
     }
 
     else if (m_normaldistr == 1){
         for (int i=0; i<m_nv; i++){
-            initial_a[i] = normal_weights(m_randomEngine);
+            initial_a[i] = normal_weights(gen);
             for (int j=0; j<m_nh; j++){
-                initial_w(i, j) = normal_weights(m_randomEngine);
+                initial_w(i, j) = normal_weights(gen);
             }
         }
 
         for (int j=0; j<m_nh; j++){
-            initial_b[j] = normal_weights(m_randomEngine);
+            initial_b[j] = normal_weights(gen);
         }
     }
 
     for (int i=0; i<m_nv; i++){
-        initial_x[i] = uniform_position(m_randomEngine);
+        initial_x[i] = UniformNumberGenerator(gen);
     }
 
     m_system->getWaveFunction()->set_a(initial_a);

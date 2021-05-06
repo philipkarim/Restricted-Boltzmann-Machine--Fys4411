@@ -4,7 +4,7 @@
 #include "../system.h"
 #include "../WaveFunctions/wavefunction.h"
 
-#include <vector>
+#include <armadillo>
 
 using std::cout;
 
@@ -14,7 +14,7 @@ HarmonicOscillator::HarmonicOscillator(System* system, double omega) :
     m_omega  = omega;
 }
 
-double HarmonicOscillator::computeLocalEnergy(std::vector<double> X_visible) {
+double HarmonicOscillator::computeLocalEnergy(arma::vec X_visible) {
     //This function is computing the kinetic and potential energies
 
     //Defining some variables to be used in the calculations 
@@ -42,7 +42,7 @@ double HarmonicOscillator::computeLocalEnergy(std::vector<double> X_visible) {
   
   }
    
-double HarmonicOscillator::computePotentialEnergy(std::vector<double> X_visible) {
+double HarmonicOscillator::computePotentialEnergy(arma::vec X_visible) {
   //Done
 
   //Potential energy noninteracting case

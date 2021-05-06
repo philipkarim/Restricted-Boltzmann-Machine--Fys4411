@@ -133,6 +133,10 @@ void System::setWaveFunction(WaveFunction* waveFunction) {
     m_waveFunction = waveFunction;
 }
 
+void System::setInitialState(InitialState* initialState) {
+    m_initialState = initialState;
+}
+
 void System::setSampleMethod(int sampleMethod) {
     m_sampleMethod = sampleMethod;
 }

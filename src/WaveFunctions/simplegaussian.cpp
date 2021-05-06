@@ -6,7 +6,7 @@
 #include "../particle.h"
 
 #include <iostream>
-#include <vector>
+#include <armadillo>
 
 using namespace std;
 SimpleGaussian::SimpleGaussian(System* system, int part, 
@@ -18,7 +18,7 @@ SimpleGaussian::SimpleGaussian(System* system, int part,
 
 }
 
-double SimpleGaussian::evaluate(std::vector<double> position) {
+double SimpleGaussian::evaluate(arma::vec position) {
      //Implementation of wavefunction at the given position
 
 
@@ -26,14 +26,14 @@ double SimpleGaussian::evaluate(std::vector<double> position) {
     return 1.;
 }
 
-double SimpleGaussian::computeDoubleDerivative(std::vector<double> position) {
+double SimpleGaussian::computeDoubleDerivative(arma::vec position) {
      //Computes the value of the analytical double derivative for the non interacting case. 
 
     //Return a double value
     return 1.;
   }
 
-double SimpleGaussian::computeDerivative(std::vector<double> position) {
+double SimpleGaussian::computeDerivative(arma::vec position) {
      //Computes the value of the analytical derivative 
 
     //Return a double value

@@ -28,8 +28,10 @@ public:
     void setEquilibrationFraction   (double equilibrationFraction);
     void setHamiltonian             (class Hamiltonian* hamiltonian);
     void setWaveFunction            (class WaveFunction* waveFunction);
+    void setInitialState            (class InitialState* initialState);
     class WaveFunction*             getWaveFunction()   { return m_waveFunction; }
     class Hamiltonian*              getHamiltonian()    { return m_hamiltonian; }
+    class InitialState*             getInitialState()    { return m_initialState; }
     class Sampler*                  getSampler()        { return m_sampler; }
     std::vector<class Particle*>    getParticles()      { return m_particles; }
     class Random*                   getRandomEngine()   { return m_random; }
@@ -69,6 +71,8 @@ private:
     class WaveFunction*             m_waveFunction = nullptr;
     class Hamiltonian*              m_hamiltonian = nullptr;
     class Sampler*                  m_sampler = nullptr;
+    class InitialState*             m_initialState = nullptr;
+
     std::vector<class Particle*>    m_particles = std::vector<class Particle*>();
     class Random*                   m_random = nullptr;
     std::vector<double>             m_energyarr;

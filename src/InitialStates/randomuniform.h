@@ -1,6 +1,6 @@
 #pragma once
 #include "initialstate.h"
-#include <vector>
+#include <armadillo>
 
 class RandomUniform : public InitialState {
 public:
@@ -16,12 +16,12 @@ private:
     double m_sigma;
     bool m_normaldistr;
 
-    std::vector<double> initial_x;      // visible nodes (i.e. position)
-    std::vector<double> initial_h;      // hidden nodes
-    std::vector<double> initial_a;      // visible bias
-    std::vector<double> initial_b;      // hidden bias
+    arma::vec initial_x;      // visible nodes (i.e. position)
+    arma::vec initial_h;      // hidden nodes
+    arma::vec initial_a;      // visible bias
+    arma::vec initial_b;      // hidden bias
     //This is actually a matrix
-    std::vector<vector<double>> initial_w;      // interaction of biases
+    arma::mat initial_w;      // interaction of biases
 
 };
 

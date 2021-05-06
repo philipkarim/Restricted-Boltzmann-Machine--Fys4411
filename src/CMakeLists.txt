@@ -29,6 +29,7 @@ include_directories(
     InitialStates
     WaveFunctions
     Math
+  
 )
 
 # Add sources from all directories
@@ -38,9 +39,13 @@ file(
     GLOB SOURCES "InitialStates/*.cpp"
     GLOB SOURCES "WaveFunctions/*.cpp"
     GLOB SOURCES "Math/*.cpp"
-
 )
 
+find_package(Armadillo REQUIRED)
+include_directories(${ARMADILLO_INCLUDE_DIRS})
+add_executable(rbm ${SOURCES})
+target_link_libraries(rbm ${ARMADILLO_LIBRARIES})
 
 # Create executable called "rbm"
-add_executable(rbm ${SOURCES})
+#add_executable(rbm ${SOURCES})
+#target_link_libraries(rbm armadillo)
