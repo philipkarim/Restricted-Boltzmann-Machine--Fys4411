@@ -7,7 +7,7 @@
 #include "InitialStates/initialstate.h"
 #include <iostream>
 #include "SGD.h"
-
+#include<armadillo>
 #include "WaveFunctions/neuralstate.h"
 
 #include <stdlib.h>     /* exit, EXIT_FAILURE */
@@ -27,24 +27,46 @@ bool System::metropolisStep() {
     // Performing the actual Metropolis step for the Metropolis algorithm:
     // Choosing a particle at random and changing it's position by a random
     // amount, and checks if the step is accepted by the Metropolis test
-    
-    // Defining some variables to be used
-    double psi_factor=0;
-     //Random integer generator
-     std::random_device rd;
-     std::mt19937_64 gen(rd());
-     std::uniform_int_distribution<int> distribution(0,m_numberOfParticles-1);
-     std::uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
 
+    //Random integer generator
+    random_device rd;
+    mt19937_64 gen(rd());
+    uniform_int_distribution<int> distribution(0,m_numberOfVN-1);//-1?
+    uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
+
+    // Defining some variables to be used
+    int random_index;
+    double Position_old, psi_old, psi_new, psi_factor, step;
+    arma::vec X_old;
+    
+    X_old=m_waveFunction->get_X();
+
+    //Random index used to choose a random particle
+    random_index=distribution(gen);
+
+    //Defining the random particle:
+    Position_old=X_old[random_index];
+    psi_old=m_waveFunction->evaluate(X_old);
+
+    //Start the step which gives movement to the particle
+    step=m_stepLength*(UniformNumberGenerator(gen)-0.5);
+    X_old[random_index]+=step;
+    
+     //Extracting the new wavefunction, and checks if it is accepted
+    psi_new=m_waveFunction->evaluate(X_old);
+    psi_factor=psi_new*psi_new/(psi_old*psi_old);
      
-     //Checks if the move is accepted:
-     if (UniformNumberGenerator(gen)<=psi_factor){
+    //Checks if the move is accepted:
+    if (UniformNumberGenerator(gen)<=psi_factor){
+        m_waveFunction->set_X(X_old);        
+
         return true;
      }
      else{
-         //m_particles[random_index]->setPosition(PositionOld);
+         X_old[random_index]=Position_old;
+        
         return false;
-      }
+     }
 }
 
 bool System::metropolisStepImportanceSampling() {
@@ -76,6 +98,8 @@ void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
     for (int rbm_cycle=0; rbm_cycle<RBMCycles; rbm_cycle++){
         runMetropolisSteps();
     }
+    
+    //m_system->SGDOptimize(m_sampler->getGradient())
 
 
 }

@@ -25,7 +25,7 @@ int main() {
     int numberOfParticles   = 1;            // Set amount of particles
     int hidden_nodes        = 1;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
-    int sampler_method      = 1;            //1=BF, 2=IS, 3=GS
+    int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
     bool uniform_distr      = 0;            //0=Normal, 1=Uniform
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.

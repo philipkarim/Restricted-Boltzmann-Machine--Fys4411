@@ -12,6 +12,7 @@ HarmonicOscillator::HarmonicOscillator(System* system, double omega) :
         Hamiltonian(system) {
     assert(omega   > 0);
     m_omega  = omega;
+    
 }
 
 double HarmonicOscillator::computeLocalEnergy(arma::vec X_visible) {
@@ -25,18 +26,16 @@ double HarmonicOscillator::computeLocalEnergy(arma::vec X_visible) {
 
     //Computing the non interacting energy
     if (m_system->getInteraction()==false){
+      //Computing the kinetic energy
+      kineticEnergy=m_system->getWaveFunction()->computeDoubleDerivative(X_visible);
+      potentialEnergy=computePotentialEnergy(X_visible);
 
-    //Computing the kinetic energy
-    //kineticEnergy=m_system->getWaveFunction()->computeDoubleDerivative();
-
-    potentialEnergy=computePotentialEnergy(X_visible);
-
-    //Returning the energy as a double
-    return (kineticEnergy + potentialEnergy);
+      //Returning the energy as a double
+      return (kineticEnergy + potentialEnergy);
   }
     else{
       cout<<"Interacting energy not done";
-    
+
     return 1.;
     }
   
@@ -46,7 +45,7 @@ double HarmonicOscillator::computePotentialEnergy(arma::vec X_visible) {
   //Done
 
   //Potential energy noninteracting case
-  int numberVN=0; //= m_system->getNumberVisibleNodes();
+  int numberVN=m_system->getNumberOfVN(); //= m_system->getNumberVisibleNodes();
   //Defining some variables to be used later
   double potentialEnergy=0;
     

@@ -15,7 +15,7 @@ SGD::SGD(System* system, double eta){
 }
 
 /* Calculate optimized weights via stochastic gradient descent */
-void SGD::computeWeights(arma::vec gradE){
+void SGD::SGDOptimize(arma::vec gradE){
     int m_nv = m_system->getNumberOfVN();
     int m_nh = m_system->getNumberOfHN();
 

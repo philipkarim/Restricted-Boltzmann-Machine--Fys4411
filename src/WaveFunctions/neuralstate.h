@@ -10,6 +10,9 @@ public:
     double computeDoubleDerivative(arma::vec position);
     double computeDerivative(arma::vec position);
 
+    double sigmoid(double x);
+    double v(int j);
+
     void set_X(arma::vec X){ m_x = X; }
     void set_h(arma::vec h){ m_h = h; }
     void set_a(arma::vec a){ m_a = a; }

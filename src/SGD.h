@@ -7,7 +7,7 @@ using namespace arma;
 class SGD {
 public:
     SGD(System* system, double eta);
-    void computeWeights(arma::vec gradE);
+    void SGDOptimize(arma::vec gradE);
 
 private:
     double m_eta;   // learning rate

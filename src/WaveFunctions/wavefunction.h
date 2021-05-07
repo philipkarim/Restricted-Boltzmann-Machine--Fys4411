@@ -8,10 +8,13 @@ class WaveFunction {
 public:
     WaveFunction(class System* system);
 
-    double evaluate(arma::vec position);
+    virtual double evaluate(arma::vec position)=0;
     //void setupInitialState();
-    double computeDoubleDerivative(arma::vec position);
-    double computeDerivative(arma::vec position);
+    virtual double computeDoubleDerivative(arma::vec position)=0;
+    virtual double computeDerivative(arma::vec position)=0;
+    virtual double sigmoid(double x)=0;
+    virtual double v(int j)=0;
+
 
     virtual void set_X(arma::vec X)=0;
     virtual void set_h(arma::vec h)=0;

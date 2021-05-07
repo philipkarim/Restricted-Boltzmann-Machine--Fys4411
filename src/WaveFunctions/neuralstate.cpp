@@ -20,17 +20,69 @@ NeuralState::NeuralState(System* system, int part,
 
 double NeuralState::evaluate(arma::vec position) {
      //Implementation of wavefunction at the given position
+        
+        double m_term1 = 0.0;
+        double m_term2 = 1.0;
+        arma::mat O;
+    for (int i=0; i<m_nv; i++){
+        m_term1 += (position[i] - m_a[i])*(position[i] - m_a[i]);
+    }
+    m_term1 = exp(-m_term1/(2*m_sigma*m_sigma));
+
+    O = m_b + ((position.t()*m_w).t()) / ((double) m_sigma*m_sigma);
+    for (int j=0; j<m_nh; j++){
+        m_term2 *= (1 + exp(O[j]));
+    }
+
+    return m_term1*m_term2;
+}
+
 
 
     //Return a double value
-    return 1.;
-}
+    //return 1.};
+
 
 double NeuralState::computeDoubleDerivative(arma::vec position) {
      //Computes the value of the analytical double derivative for the non interacting case. 
+    int M = m_system->getNumberOfVN();
+    int N = m_system->getNumberOfHN();
 
-    //Return a double value
-    return 1.;
+    arma::vec S; S.zeros(N);
+    arma::vec S_tilde; S_tilde.zeros(N);
+    arma::vec one_vector; one_vector.ones(M);
+
+    for (int j = 0; j<N; j++){
+        S[j] = sigmoid(v(j));
+        S_tilde[j] = sigmoid(v(j))*sigmoid(-v(j));
+    }
+
+    arma::vec O = m_b + (m_x.t()*m_w).t()/(m_sigma*m_sigma);
+
+    double Ek = 0.0;
+    double term1 = 0.0;
+    double term2 = 0.0;
+    double term3 = 0.0;
+    double term4 = 0.0;
+    for (int i=0; i<m_nv; i++){
+        double sum1 = 0.0;
+        double sum2 = 0.0;
+        double sum3 = 0.0;
+        for (int j=0; j<m_nh; j++){
+            sum1 += m_w(i, j)*S[j];
+            sum2 += m_w(i, j)*S[j];
+            sum3 += m_w(i, j)*m_w(i, j)*S_tilde[j];
+        }
+        term1 += (m_x[i] - m_a[i])*(m_x[i] - m_a[i]);
+        term2 += -2*(m_x[i] - m_a[i])*sum1;
+        term3 += sum2*sum2;
+        term4 += sum3;
+    }
+
+    Ek = -1.0/(2*pow(m_sigma, 4))*(term1 + term2 + term3 + term4) + m_nv/(2*m_sigma*m_sigma);
+
+    cout<<Ek;
+    return Ek;
   }
 
 double NeuralState::computeDerivative(arma::vec position) {
@@ -39,3 +91,15 @@ double NeuralState::computeDerivative(arma::vec position) {
     //Return a double value
     return 1.0;
   }
+
+  //Extra functions from the web
+  /* Compute the logistic function of x */
+double NeuralState::sigmoid(double x){
+    return (1/(1+exp(-x)));
+}
+
+/* Compute the exponent of the exponential in the logistic function */
+double NeuralState::v(int j){
+    double a = (m_b[j] + m_x.t()*m_w.col(j)).eval()(0,0);
+    return (m_b[j] + m_x.t()*m_w.col(j)).eval()(0,0);
+}
