@@ -8,6 +8,7 @@
 #include <iostream>
 #include <armadillo>
 
+using namespace arma;
 using namespace std;
 NeuralState::NeuralState(System* system, int part, 
                                 int dim, double sigma) :
@@ -19,22 +20,26 @@ NeuralState::NeuralState(System* system, int part,
 }
 
 double NeuralState::evaluate(arma::vec position) {
-     //Implementation of wavefunction at the given position
-        
-        double m_term1 = 0.0;
-        double m_term2 = 1.0;
-        arma::mat O;
-    for (int i=0; i<m_nv; i++){
-        m_term1 += (position[i] - m_a[i])*(position[i] - m_a[i]);
-    }
-    m_term1 = exp(-m_term1/(2*m_sigma*m_sigma));
+    //Implementation of wavefunction at the given position
+    double exponent_one=0;
+    double product_term=1;
+    double sum_in_product=1;
+    double psi_value;
 
-    O = m_b + ((position.t()*m_w).t()) / ((double) m_sigma*m_sigma);
-    for (int j=0; j<m_nh; j++){
-        m_term2 *= (1 + exp(O[j]));
+    for (int i=0; i<m_system->getNumberOfVN(); i++){
+        exponent_one+=((position[i]*m_a[i])*(position[i]*m_a[i]))/(2*m_sigma*m_sigma);
     }
 
-    return m_term1*m_term2;
+    //Might have to transpose some of the matrixes and vectors
+    for (int j=0; j<m_system->getNumberOfHN(); j++){
+        for (int ii=0; ii<m_system->getNumberOfVN(); ii++){
+        sum_in_product+=(position[ii]*m_w[ii, j])/(m_sigma*m_sigma);
+        product_term*=(1+exp(m_b[j]+sum_in_product));
+        }
+    }
+    psi_value=exp(-exponent_one)*product_term;
+
+    return psi_value;
 }
 
 
