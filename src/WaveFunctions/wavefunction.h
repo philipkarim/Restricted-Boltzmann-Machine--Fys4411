@@ -13,7 +13,7 @@ public:
     virtual double computeDoubleDerivative(arma::vec position)=0;
     virtual double computeDerivative(arma::vec position)=0;
     virtual double sigmoid(double x)=0;
-    virtual double v(int j)=0;
+    virtual double sigmoid_input(int x)=0;
 
 
     virtual void set_X(arma::vec X)=0;

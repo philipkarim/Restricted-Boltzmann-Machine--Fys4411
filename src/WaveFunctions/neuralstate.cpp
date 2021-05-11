@@ -49,7 +49,22 @@ double NeuralState::evaluate(arma::vec position) {
 
 
 double NeuralState::computeDoubleDerivative(arma::vec position) {
-     //Computes the value of the analytical double derivative for the non interacting case. 
+    //Computes the value of the analytical double derivative for the non interacting case.
+    double sum_M=0;
+    double sum_N=0;
+    double sig_inp;
+    for (int i=0; i<m_system->getNumberOfVN(); i++){
+        sum_M-=1/(m_sigma*m_sigma);
+        for (int j=0; i<m_system->getNumberOfHN(); j++){
+            sig_inp=sigmoid_input(j);
+            sum_N+=(m_w(i,j)*m_w(i,j))/(pow(m_sigma, 4))*sigmoid(sig_inp)*sigmoid(-sig_inp);
+        }
+        sum_M+=sum_N;
+    }
+    return sum_M;
+}
+
+/*
     int M = m_system->getNumberOfVN();
     int N = m_system->getNumberOfHN();
 
@@ -89,22 +104,37 @@ double NeuralState::computeDoubleDerivative(arma::vec position) {
     cout<<Ek;
     return Ek;
   }
+  */
 
+//Computes the value of the analytically first derivative 
 double NeuralState::computeDerivative(arma::vec position) {
-     //Computes the value of the analytical derivative 
-
+    double first_sum=0;
+    double sec_sum=0;
+    
+    for (int i =0; i<m_system->getNumberOfVN(); i++){
+        first_sum-=(position[i]-m_a[i])/(m_sigma*m_sigma);
+        for (int j=0; j<m_system->getNumberOfHN(); j++){
+            sec_sum=(m_w(i,j)*m_w(i,j))/(pow(m_sigma,4))*sigmoid(sigmoid_input(j));
+        }
+        first_sum+=sec_sum;
+    }
     //Return a double value
-    return 1.0;
+    return first_sum;
   }
 
-  //Extra functions from the web
-  /* Compute the logistic function of x */
+
+//Just the sigmoid function to be used in the derivative functions
 double NeuralState::sigmoid(double x){
     return (1/(1+exp(-x)));
 }
 
-/* Compute the exponent of the exponential in the logistic function */
-double NeuralState::v(int j){
-    double a = (m_b[j] + m_x.t()*m_w.col(j)).eval()(0,0);
-    return (m_b[j] + m_x.t()*m_w.col(j)).eval()(0,0);
+//Computes the input of the sigmoid function
+double NeuralState::sigmoid_input(int x){
+    double sum=1;
+    
+    for (int i=0; i<m_system->getNumberOfVN(); i++){
+        sum+=m_x[i]*m_w(i,x)/(m_sigma*m_sigma);
+    }
+
+    return m_b[x]+sum;
 }
