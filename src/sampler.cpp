@@ -46,8 +46,8 @@ void Sampler::sample(bool acceptedStep) {
     //Starting the clock
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     //Calculating the local energy
-    //double localEnergy;
-    double localEnergy= m_system->getHamiltonian()->computeLocalEnergy();
+    double localEnergy;
+    //double localEnergy= m_system->getHamiltonian()->computeLocalEnergy();
 
    //Stopping the clock, adding the time together for each energy cycle
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -63,7 +63,7 @@ void Sampler::sample(bool acceptedStep) {
     //Looping over the particles in the different dimensions finding the
     //parameters used in gradient decent
 
-    //Fix the error when computing the energy in line 52
+    //Fix the error when computing the energy in line 52, think some of the matrix elements is out of bound
     //Create a function calling the derivative of the thing
     //Add a call of the function in the rbm loop sgd
 

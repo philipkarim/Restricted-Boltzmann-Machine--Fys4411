@@ -136,8 +136,8 @@ double NeuralState::sigmoid_input(int x){
     double sum=1;
     
     for (int i=0; i<m_system->getNumberOfVN(); i++){
-        sum+=m_x[i]*m_w(i,x)/(m_sigma*m_sigma);
+        sum+=m_x(i)*m_w(i,x)/(m_sigma*m_sigma);
     }
-
-    return m_b[x]+sum;
+    //return 1;
+    return m_b(x)+sum;
 }
