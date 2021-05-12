@@ -19,7 +19,7 @@ int main() {
     // Seed for the random number generator
     int seed = 2021;
 
-    int numberOfSteps       = (int) pow(2,19); //Amount of metropolis steps
+    int numberOfSteps       = (int) pow(2,10); //Amount of metropolis steps
     int cycles_RBM          =4;
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles

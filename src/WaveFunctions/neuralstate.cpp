@@ -47,7 +47,10 @@ double NeuralState::evaluate(arma::vec position) {
     //Return a double value
     //return 1.};
 
-
+//The core dumped error is from this function
+//Think it is because of the input being int or doubles instead of vectors
+//Is v_j a vector?
+//Might need to transpose some places 
 double NeuralState::computeDoubleDerivative(arma::vec position) {
     //Computes the value of the analytical double derivative for the non interacting case.
     double sum_M=0;

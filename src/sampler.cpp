@@ -43,13 +43,11 @@ void Sampler::sample(bool acceptedStep) {
         m_cumulativeE_Lderiv_expect=0;
     }
 
-
-    
     //Starting the clock
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     //Calculating the local energy
-    double localEnergy;
-    //double localEnergy= m_system->getHamiltonian()->computeLocalEnergy();
+    //double localEnergy;
+    double localEnergy= m_system->getHamiltonian()->computeLocalEnergy();
 
    //Stopping the clock, adding the time together for each energy cycle
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
