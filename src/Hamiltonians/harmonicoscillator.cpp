@@ -15,8 +15,9 @@ HarmonicOscillator::HarmonicOscillator(System* system, double omega) :
     
 }
 
-double HarmonicOscillator::computeLocalEnergy(arma::vec X_visible) {
+double HarmonicOscillator::computeLocalEnergy() {
   //This function is computing the kinetic and potential energies
+  arma::vec X_visible=m_system->getWaveFunction()->get_X();
 
   //Defining some variables to be used in the calculations 
   double potentialEnergy = 0;

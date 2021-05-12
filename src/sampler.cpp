@@ -48,7 +48,8 @@ void Sampler::sample(bool acceptedStep) {
     //Starting the clock
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     //Calculating the local energy
-    double localEnergy; //= m_system->getHamiltonian()->computeLocalEnergy(hidden_nodes_maybe);
+    double localEnergy;
+    //double localEnergy= m_system->getHamiltonian()->computeLocalEnergy();
 
    //Stopping the clock, adding the time together for each energy cycle
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -61,12 +62,36 @@ void Sampler::sample(bool acceptedStep) {
       meanenergy_list.push_back(localEnergy);
     }
 
+    //Looping over the particles in the different dimensions finding the
+    //parameters used in gradient decent
+
+    //Fix the error when computing the energy in line 52
+    //Create a function calling the derivative of the thing
+    //Add a call of the function in the rbm loop sgd
+
+    /*
+    double beta_value =m_system->getWaveFunction()->getParameters()[1];
+    for (int i=0; i<m_system->getNumberOfParticles(); i++){
+        for (int dim=0; dim<m_system->getNumberOfDimensions()-1; dim++){
+            part=m_system->getParticles().at(i)->getPosition()[dim];
+            E_L_deriv -= part*part;
+        }
+        int dim = m_system->getNumberOfDimensions()-1;
+        part2=m_system->getParticles().at(i)->getPosition()[dim];
+        E_L_deriv -= part2*part2*beta_value;     //Think the instabillity is coming from here (fixed it?)
+    }
+  */
+
     //Cumulating the energy
     m_cumulativeEnergy  += localEnergy;
     m_stepNumber++;
 
     //Used in variance
     m_cumulativeEnergy2+=(localEnergy*localEnergy);
+
+    //Used in SGD
+    //m_cumulativeE_Lderiv+=E_L_deriv;
+    //m_cumulativeE_Lderiv_expect+=E_L_deriv*localEnergy;
 
     if (acceptedStep){
         m_acceptedSteps++;
@@ -106,6 +131,7 @@ void Sampler::computeAverages() {
     m_acceptRatio = m_acceptedSteps / steps_min_eq;
     m_E_Lderiv=m_cumulativeE_Lderiv/steps_min_eq;
     m_E_Lderiv_expect=m_cumulativeE_Lderiv_expect/steps_min_eq;
+
 }
 
 double Sampler::computeVariance(std::vector<double> x_sample, double x_mean){

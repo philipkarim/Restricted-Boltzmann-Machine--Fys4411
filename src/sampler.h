@@ -17,7 +17,7 @@ public:
     //double getCumulativeEnergyDerivAvg()          { return m_E_Lderiv; }
     //double getCumulativeEnergyDerivExpectAvg()          { return m_E_Lderiv_expect; }
 
-    //double Energy_Der2()          { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
+    double getEnergy_Der2()          { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
 
 
     //double getGradientDecentValues()        { return m_cumulativeEnergy, m_cumulativeE_Lderiv, m_cumulativeE_Lderiv_expect; }

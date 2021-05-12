@@ -34,7 +34,7 @@ int main() {
     bool interaction        = false;        // True-> interaction, False->Not interaction
     double sigma_val        =1.0;
     double initialization   =0.01;
-    double learningRate     =0.001;
+    double learningRate     =0.3;
     //Write to file
     bool generalwtf        =false;          // General information- write to file
 

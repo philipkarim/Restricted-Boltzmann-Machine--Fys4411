@@ -6,7 +6,7 @@
 class HarmonicOscillator : public Hamiltonian {
 public:
     HarmonicOscillator(System* system, double omega);
-    double computeLocalEnergy(arma::vec X_visible);
+    double computeLocalEnergy();
     double computePotentialEnergy(arma::vec X_visible);
     double computeKineticEnergy(arma:: vec X_visible);
     double computeInteractingEnergy(arma:: vec X_visible);
