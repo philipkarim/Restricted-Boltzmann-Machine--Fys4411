@@ -89,17 +89,21 @@ bool System::GibbsSampling() {
 
 }
 
-void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
-    m_sampler                   = new Sampler(this);
-    m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
+void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps, double lr){
     m_RBMCycles                 = RBMCycles;
-    m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
+    m_SGD= (new SGD(this, lr));
+
+    //m_sampler                   = new Sampler(this);
+    //m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
+    //m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
 
     for (int rbm_cycle=0; rbm_cycle<RBMCycles; rbm_cycle++){
+        m_sampler                   = new Sampler(this);
+        m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
+        m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
         runMetropolisSteps();
+        m_SGD->SGDOptimize(m_sampler->getGradient());
     }
-    
-    //m_system->SGDOptimize(m_sampler->getGradient())
 
 
 }

@@ -33,11 +33,18 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
 }
 
 void RandomUniform::setupInitialState() {
-    initial_x.zeros(m_nv);
-    initial_h.zeros(m_nh);
-    initial_a.zeros(m_nv);
-    initial_b.zeros(m_nh);
-    initial_w.zeros(m_nv, m_nh);
+    vec initial_x(m_nv);      // visible nodes (i.e. position)
+    vec initial_h(m_nh);      // hidden nodes
+    vec initial_a(m_nv);      // visible bias
+    vec initial_b(m_nh);      // hidden bias
+    //This is actually a matrix
+    mat initial_w(m_nv, m_nh);      // interaction of biases
+
+    initial_x.zeros();
+    initial_h.zeros();
+    initial_a.zeros();
+    initial_b.zeros();
+    initial_w.zeros();
 
     random_device rd;
     mt19937_64 gen(rd());

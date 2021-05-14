@@ -1,4 +1,6 @@
 #pragma once
+#include <armadillo>
+using namespace arma;
 
 class Sampler {
 public:
@@ -17,7 +19,8 @@ public:
     //double getCumulativeEnergyDerivAvg()          { return m_E_Lderiv; }
     //double getCumulativeEnergyDerivExpectAvg()          { return m_E_Lderiv_expect; }
 
-    double getEnergy_Der2()          { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
+    //double getEnergy_Der2()          { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
+    vec getGradient()             { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
 
 
     //double getGradientDecentValues()        { return m_cumulativeEnergy, m_cumulativeE_Lderiv, m_cumulativeE_Lderiv_expect; }
@@ -32,10 +35,11 @@ private:
     double  m_acceptedSteps = 0;
     double  m_acceptRatio = 0;
     double time_sec;
-    double m_E_Lderiv=0;
-    double m_E_Lderiv_expect=0;
-    double m_cumulativeE_Lderiv=0;
-    double m_cumulativeE_Lderiv_expect=0;
+    vec m_E_Lderiv;
+    vec m_E_Lderiv_expect;
+    vec m_cumulativeE_Lderiv;
+    vec m_cumulativeE_Lderiv_expect;
+    vec m_energy_derivate;
 
     std::vector<double> meanenergy_list = std::vector<double>();
 

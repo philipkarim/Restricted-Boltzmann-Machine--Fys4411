@@ -21,7 +21,7 @@ public:
     bool metropolisStepImportanceSampling();
     bool GibbsSampling();
 
-    void runBoltzmannMachine        (int RBMCycles, int numberOfMetropolisSteps);
+    void runBoltzmannMachine        (int RBMCycles, int numberOfMetropolisSteps, double lr);
     void runMetropolisSteps         ();
 
     void setNumberOfParticles       (int numberOfParticles);
@@ -37,6 +37,8 @@ public:
     class Hamiltonian*              getHamiltonian()    { return m_hamiltonian; }
     class InitialState*             getInitialState()   { return m_initialState; }
     class Sampler*                  getSampler()        { return m_sampler; }
+    class SGD*                      getSGD()        { return m_SGD; }
+
     std::vector<class Particle*>    getParticles()      { return m_particles; }
     class Random*                   getRandomEngine()   { return m_random; }
     int getNumberOfParticles()          { return m_numberOfParticles; }
@@ -83,6 +85,7 @@ private:
     class Hamiltonian*              m_hamiltonian = nullptr;
     class Sampler*                  m_sampler = nullptr;
     class InitialState*             m_initialState = nullptr;
+    class SGD*                      m_SGD = nullptr;
 
     std::vector<class Particle*>    m_particles = std::vector<class Particle*>();
     class Random*                   m_random = nullptr;

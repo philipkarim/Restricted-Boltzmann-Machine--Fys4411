@@ -9,7 +9,7 @@
 #include <armadillo>
 
 using namespace arma;
-using namespace std;
+//using namespace std;
 NeuralState::NeuralState(System* system, int part, 
                                 int dim, double sigma) :
         WaveFunction(system) {
@@ -19,7 +19,7 @@ NeuralState::NeuralState(System* system, int part,
 
 }
 
-double NeuralState::evaluate(arma::vec position) {
+double NeuralState::evaluate(vec position) {
     //Implementation of wavefunction at the given position
     double exponent_one=0;
     double product_term=1;
@@ -51,14 +51,14 @@ double NeuralState::evaluate(arma::vec position) {
 //Think it is because of the input being int or doubles instead of vectors
 //Is v_j a vector?
 //Might need to transpose some places 
-double NeuralState::computeDoubleDerivative(arma::vec position) {
+double NeuralState::computeDoubleDerivative(vec position) {
     //Computes the value of the analytical double derivative for the non interacting case.
     double sum_M=0;
     double sum_N=0;
     double sig_inp;
     for (int i=0; i<m_system->getNumberOfVN(); i++){
         sum_M-=1/(m_sigma*m_sigma);
-        for (int j=0; i<m_system->getNumberOfHN(); j++){
+        for (int j=0; j<m_system->getNumberOfHN(); j++){
             sig_inp=sigmoid_input(j);
             sum_N+=(m_w(i,j)*m_w(i,j))/(pow(m_sigma, 4))*sigmoid(sig_inp)*sigmoid(-sig_inp);
         }
@@ -110,7 +110,7 @@ double NeuralState::computeDoubleDerivative(arma::vec position) {
   */
 
 //Computes the value of the analytically first derivative 
-double NeuralState::computeDerivative(arma::vec position) {
+double NeuralState::computeDerivative(vec position) {
     double first_sum=0;
     double sec_sum=0;
     
@@ -133,8 +133,7 @@ double NeuralState::sigmoid(double x){
 
 //Computes the input of the sigmoid function
 double NeuralState::sigmoid_input(int x){
-    double sum=1;
-    
+    double sum=1.;
     for (int i=0; i<m_system->getNumberOfVN(); i++){
         sum+=m_x(i)*m_w(i,x)/(m_sigma*m_sigma);
     }

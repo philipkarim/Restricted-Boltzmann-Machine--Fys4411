@@ -16,12 +16,6 @@ private:
     double m_sigma;
     bool m_normaldistr;
 
-    arma::vec initial_x;      // visible nodes (i.e. position)
-    arma::vec initial_h;      // hidden nodes
-    arma::vec initial_a;      // visible bias
-    arma::vec initial_b;      // hidden bias
-    //This is actually a matrix
-    arma::mat initial_w;      // interaction of biases
 
 };
 

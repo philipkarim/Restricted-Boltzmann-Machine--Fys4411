@@ -19,11 +19,13 @@ int main() {
     // Seed for the random number generator
     int seed = 2021;
 
-    int numberOfSteps       = (int) pow(2,10); //Amount of metropolis steps
-    int cycles_RBM          =4;
+    //Correct approx: 12, 10, 1, 1, 4, 0.03
+
+    int numberOfSteps       = (int) pow(2,12); //Amount of metropolis steps
+    int cycles_RBM          = 10;
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
-    int hidden_nodes        = 1;
+    int hidden_nodes        = 4;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
     bool uniform_distr      = 0;            //0=Normal, 1=Uniform
@@ -34,7 +36,7 @@ int main() {
     bool interaction        = false;        // True-> interaction, False->Not interaction
     double sigma_val        =1.0;
     double initialization   =0.01;
-    double learningRate     =0.3;
+    double learningRate     =0.03;
     //Write to file
     bool generalwtf        =false;          // General information- write to file
 
@@ -51,7 +53,7 @@ int main() {
     system->setSampleMethod             (sampler_method);
     system->setInteraction              (interaction);
     system->setgeneralwtf               (generalwtf);
-    system->runBoltzmannMachine          (cycles_RBM, numberOfSteps);
+    system->runBoltzmannMachine          (cycles_RBM, numberOfSteps, learningRate);
 
     return 0;
 }

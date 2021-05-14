@@ -12,8 +12,8 @@ public:
     //void setupInitialState();
     virtual double computeDoubleDerivative(arma::vec position)=0;
     virtual double computeDerivative(arma::vec position)=0;
-    virtual double sigmoid(double x)=0;
-    virtual double sigmoid_input(int x)=0;
+    //virtual double sigmoid(double x)=0;
+    //virtual double sigmoid_input(int x)=0;
 
 
     virtual void set_X(arma::vec X)=0;
@@ -28,6 +28,7 @@ public:
     virtual arma::vec get_b()=0;
     //This is actually a matrix. Use armadillo or eigen maybe?
     virtual arma::mat get_w()=0;
+    virtual double getSigma()=0;
 
     //virtual void setupInitialState();
 
@@ -51,5 +52,8 @@ protected:
     int m_dim = 0;      // number of dimensions
 
     class System* m_system = nullptr;
+private:
+    virtual double sigmoid(double x)=0;
+    virtual double sigmoid_input(int x)=0;
 
 };

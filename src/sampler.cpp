@@ -23,6 +23,7 @@ using namespace std;
 using std::cout;
 using std::endl;
 
+using namespace arma;
 
 Sampler::Sampler(System* system) {
     m_system = system;
@@ -36,18 +37,23 @@ void Sampler::setNumberOfMetropolisSteps(int steps) {
 void Sampler::sample(bool acceptedStep) {
     //Sampling interesting results
     if (m_stepNumber == 0) {
+        //m_energy=0;
+        int VN=m_system->getNumberOfVN();
+        int HN=m_system->getNumberOfHN();
+        m_cumulativeE_Lderiv.zeros(HN + VN + HN*VN);
+        m_cumulativeE_Lderiv_expect.zeros(HN + VN + HN*VN);
         m_cumulativeEnergy = 0;
         m_cumulativeEnergy2 = 0;
         time_sec =0;
-        m_cumulativeE_Lderiv=0;
-        m_cumulativeE_Lderiv_expect=0;
+        m_E_Lderiv.zeros(HN + VN + HN*VN);
+        m_E_Lderiv_expect.zeros(HN + VN + HN*VN);
     }
 
     //Starting the clock
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     //Calculating the local energy
-    double localEnergy;
-    //double localEnergy= m_system->getHamiltonian()->computeLocalEnergy();
+    //double localEnergy;
+    double localEnergy= m_system->getHamiltonian()->computeLocalEnergy();
 
    //Stopping the clock, adding the time together for each energy cycle
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -88,8 +94,10 @@ void Sampler::sample(bool acceptedStep) {
     m_cumulativeEnergy2+=(localEnergy*localEnergy);
 
     //Used in SGD
-    //m_cumulativeE_Lderiv+=E_L_deriv;
-    //m_cumulativeE_Lderiv_expect+=E_L_deriv*localEnergy;
+    vec energy_derivate = m_system->getHamiltonian()->computeLocalEnergyGradient();
+
+    m_cumulativeE_Lderiv+=energy_derivate;
+    m_cumulativeE_Lderiv_expect+=energy_derivate*localEnergy;
 
     if (acceptedStep){
         m_acceptedSteps++;
