@@ -20,11 +20,13 @@ int main() {
     int seed = 2021;
 
     //Correct approx: 12, 10, 1, 1, 4, 0.03
+    //Correct approx: 18, 50, 1, 1, 4, 0.001
 
-    int numberOfSteps       = (int) pow(2,12); //Amount of metropolis steps
-    int cycles_RBM          = 10;
-    int numberOfDimensions  = 1;            // Set amount of dimensions
-    int numberOfParticles   = 1;            // Set amount of particles
+
+    int numberOfSteps       = (int) pow(2,13); //Amount of metropolis steps
+    int cycles_RBM          = 20;
+    int numberOfDimensions  = 2;            // Set amount of dimensions
+    int numberOfParticles   = 2;            // Set amount of particles
     int hidden_nodes        = 4;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
@@ -35,8 +37,8 @@ int main() {
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
     bool interaction        = false;        // True-> interaction, False->Not interaction
     double sigma_val        =1.0;
-    double initialization   =0.01;
-    double learningRate     =0.03;
+    double initialization   =0.001;
+    double learningRate     =0.001;
     //Write to file
     bool generalwtf        =false;          // General information- write to file
 
@@ -57,3 +59,6 @@ int main() {
 
     return 0;
 }
+
+//Read through all code
+//Implement importance and gibbs and gibbs energy

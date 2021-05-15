@@ -23,18 +23,18 @@ double NeuralState::evaluate(vec position) {
     //Implementation of wavefunction at the given position
     double exponent_one=0;
     double product_term=1;
-    double sum_in_product=1;
+    double sum_in_product=0;
     double psi_value;
 
     for (int i=0; i<m_system->getNumberOfVN(); i++){
-        exponent_one+=((position[i]*m_a[i])*(position[i]*m_a[i]))/(2*m_sigma*m_sigma);
+        exponent_one+=((position[i]-m_a[i])*(position[i]-m_a[i]))/(2*m_sigma*m_sigma);
     }
 
     //Might have to transpose some of the matrixes and vectors
     for (int j=0; j<m_system->getNumberOfHN(); j++){
         for (int ii=0; ii<m_system->getNumberOfVN(); ii++){
-        sum_in_product+=(position[ii]*m_w[ii, j])/(m_sigma*m_sigma);
-        product_term*=(1+exp(m_b[j]+sum_in_product));
+            sum_in_product+=(position[ii]*m_w[ii, j])/(m_sigma*m_sigma);
+            product_term*=(1+exp(m_b[j]+sum_in_product));
         }
     }
     psi_value=exp(-exponent_one)*product_term;
@@ -60,6 +60,8 @@ double NeuralState::computeDoubleDerivative(vec position) {
         }
         sum_M+=sum_N;
     }
+
+    //cout<<"________________\n"<<(get_w())<<"____________";
     return sum_M;
 }
 
@@ -113,7 +115,7 @@ double NeuralState::computeDerivative(vec position) {
     for (int i =0; i<m_system->getNumberOfVN(); i++){
         first_sum-=(position[i]-m_a[i])/(m_sigma*m_sigma);
         for (int j=0; j<m_system->getNumberOfHN(); j++){
-            sec_sum=(m_w(i,j)*m_w(i,j))/(pow(m_sigma,4))*sigmoid(sigmoid_input(j));
+            sec_sum+=m_w(i,j)/(m_sigma*m_sigma)*sigmoid(sigmoid_input(j));
         }
         first_sum+=sec_sum;
     }

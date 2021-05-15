@@ -6,7 +6,7 @@
 
 #include <armadillo>
 
-using std::cout;
+using namespace std;
 using namespace arma;
 
 HarmonicOscillator::HarmonicOscillator(System* system, double omega) :
@@ -18,7 +18,10 @@ HarmonicOscillator::HarmonicOscillator(System* system, double omega) :
 
 double HarmonicOscillator::computeLocalEnergy() {
   //This function is computing the kinetic and potential energies
-  arma::vec X_visible=m_system->getWaveFunction()->get_X();
+  vec X_visible=m_system->getWaveFunction()->get_X();
+
+  //cout<<"___________________ \n";
+  //cout<<X_visible;
 
   //Defining some variables to be used in the calculations 
   double potentialEnergy = 0;
@@ -39,7 +42,8 @@ double HarmonicOscillator::computeLocalEnergy() {
   return kineticEnergy+potentialEnergy+interactionEnergy;
   }
    
-double HarmonicOscillator::computePotentialEnergy(arma::vec X_visible) {
+double HarmonicOscillator::computePotentialEnergy(vec X_visible) {
+  //Completely done
   //Potential energy
   //Defining some variables to be used
   double potentialEnergy=0;

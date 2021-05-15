@@ -51,6 +51,8 @@ bool System::metropolisStep() {
     //Start the step which gives movement to the particle
     step=m_stepLength*(UniformNumberGenerator(gen)-0.5);
     X_old[random_index]+=step;
+
+    cout<<step;
     
      //Extracting the new wavefunction, and checks if it is accepted
     psi_new=m_waveFunction->evaluate(X_old);
