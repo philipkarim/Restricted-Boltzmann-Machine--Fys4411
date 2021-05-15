@@ -138,3 +138,17 @@ double NeuralState::sigmoid_input(int x){
     //return 1;
     return m_b(x)+sum;
 }
+
+double NeuralState::computeQuantumForce(vec position, int index){
+
+    arma::vec O = m_b + (m_x.t()*m_w).t()/(m_sigma*m_sigma);
+
+    double deriv=0.0;
+    double sum1 = 0.0;
+    for(int j=0; j<m_nh; j++){
+        sum1 += m_w(index, j)/(m_sigma*m_sigma*(1.0+exp(-O[j])));
+    }
+    deriv = -(position[index]-m_a[index])/(m_sigma*m_sigma) + sum1/(m_sigma*m_sigma);
+
+    return 2*deriv;
+}

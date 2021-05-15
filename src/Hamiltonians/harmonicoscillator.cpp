@@ -43,7 +43,6 @@ double HarmonicOscillator::computeLocalEnergy() {
   }
    
 double HarmonicOscillator::computePotentialEnergy(vec X_visible) {
-  //Completely done
   //Potential energy
   //Defining some variables to be used
   double potentialEnergy=0;
@@ -58,7 +57,7 @@ double HarmonicOscillator::computePotentialEnergy(vec X_visible) {
 
 }
 
-double HarmonicOscillator::computeKineticEnergy(arma:: vec X_visible){
+double HarmonicOscillator::computeKineticEnergy(vec X_visible){
   double double_derivative, derivative;
   double_derivative=m_system->getWaveFunction()->computeDoubleDerivative(X_visible);
   derivative       =m_system->getWaveFunction()->computeDerivative(X_visible);
@@ -67,7 +66,8 @@ double HarmonicOscillator::computeKineticEnergy(arma:: vec X_visible){
 
 }
 
-double HarmonicOscillator::computeInteractingEnergy(arma:: vec X_visible){
+double HarmonicOscillator::computeInteractingEnergy( vec X_visible){
+  //Computing the interacting energy, sends in two particles
   int n_particles=m_system->getNumberOfParticles();
   double distance;
   double inter_energ;
@@ -81,14 +81,16 @@ double HarmonicOscillator::computeInteractingEnergy(arma:: vec X_visible){
 
 }
 
-double HarmonicOscillator::particleDistance(int i, int j, arma:: vec X_visible){
+double HarmonicOscillator::particleDistance(int i, int j,  vec X_visible){
     int dims = m_system->getNumberOfDimensions();
-    double distance2=0;
-
+    double norm=0;
+    double part_1, part_2;
     for(int d = 0; d<dims; d++){
-        distance2+= (X_visible[dims*i+d]-X_visible[dims*j+d])*(X_visible[dims*i+d]-X_visible[dims*j+d]);
+        part_1=X_visible[dims*i+d]-X_visible[dims*j+d];
+        part_2=X_visible[dims*i+d]-X_visible[dims*j+d];
+        norm+= part_1*part_2;
     }
-    return sqrt(distance2);
+    return sqrt(norm);
 }
 
 //Harmonic Oscillator is done down to here:
@@ -107,8 +109,8 @@ vec HarmonicOscillator::computeLocalEnergyGradient(){
     int numberOfHN = m_system->getNumberOfHN();
 
     //Continue under and change name of the function to something easier
-    arma::vec O = bb + (xx.t()*ww).t()*(1/((double) sig*sig));
-    arma::vec dPsi; dPsi.zeros(numberOfVN + numberOfHN + numberOfVN*numberOfHN);
+    vec O = bb + (xx.t()*ww).t()*(1/((double) sig*sig));
+    vec dPsi; dPsi.zeros(numberOfVN + numberOfHN + numberOfVN*numberOfHN);
 
     // compute d(psi)/d(a)*1/psi
     for (int i=0; i<numberOfVN; i++){

@@ -66,26 +66,6 @@ void Sampler::sample(bool acceptedStep) {
       meanenergy_list.push_back(localEnergy);
     }
 
-    //Looping over the particles in the different dimensions finding the
-    //parameters used in gradient decent
-
-    //Fix the error when computing the energy in line 52, think some of the matrix elements is out of bound
-    //Create a function calling the derivative of the thing
-    //Add a call of the function in the rbm loop sgd
-
-    /*
-    double beta_value =m_system->getWaveFunction()->getParameters()[1];
-    for (int i=0; i<m_system->getNumberOfParticles(); i++){
-        for (int dim=0; dim<m_system->getNumberOfDimensions()-1; dim++){
-            part=m_system->getParticles().at(i)->getPosition()[dim];
-            E_L_deriv -= part*part;
-        }
-        int dim = m_system->getNumberOfDimensions()-1;
-        part2=m_system->getParticles().at(i)->getPosition()[dim];
-        E_L_deriv -= part2*part2*beta_value;     //Think the instabillity is coming from here (fixed it?)
-    }
-  */
-
     //Cumulating the energy
     m_cumulativeEnergy  += localEnergy;
     m_stepNumber++;

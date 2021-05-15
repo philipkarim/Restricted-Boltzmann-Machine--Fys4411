@@ -14,6 +14,7 @@
 
 
 using namespace std;
+using namespace arma;
 
 System::System() {
     m_random = new Random();
@@ -43,7 +44,6 @@ bool System::metropolisStep() {
 
     //Random index used to choose a random particle
     random_index=distribution(gen);
-
     //Defining the random particle:
     Position_old=X_old[random_index];
     psi_old=m_waveFunction->evaluate(X_old);
@@ -52,7 +52,7 @@ bool System::metropolisStep() {
     step=m_stepLength*(UniformNumberGenerator(gen)-0.5);
     X_old[random_index]+=step;
 
-    cout<<step;
+    //cout<<step;
     
      //Extracting the new wavefunction, and checks if it is accepted
     psi_new=m_waveFunction->evaluate(X_old);
@@ -76,37 +76,116 @@ bool System::metropolisStepImportanceSampling() {
     //algorithm: Choosing a particle at random and changing it's position 
     // by a random amount, and checks if the step is accepted by the 
     //Metropolis-Hastings test
+
+    //Declaring vaiables to be used:
+    double Position_old, wfnew, wfold, part_1, part_2, rand_norm ,green_factor, step, greenRate=0;
+    int random_index;
+    //Defining position and quantum force vectors
+    //to be used in the importance sampling
+    vec X_old=m_waveFunction->get_X();
+    double QFOld;
+    vec X_new=m_waveFunction->get_X();
+    double QFNew;
+
+    //Random integer generator
+    random_device rd;
+    mt19937_64 gen(rd());
+    uniform_int_distribution<int> distribution(0,m_numberOfVN-1);//-1?
+    uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
+    normal_distribution<double> Normaldistribution(0.0,1.0);
+
+    random_index  =distribution(gen);
+    rand_norm  =Normaldistribution(gen);
     
-    return true;
+    //Defining the values of the previous position
+    wfold=m_waveFunction->evaluate(X_old);    
+    QFOld=m_waveFunction->computeQuantumForce(X_old, random_index);
+    Position_old= X_new[random_index];
+    X_new[random_index]+=QFOld*m_timeStep*0.5 + sqrt(m_timeStep)*rand_norm;
+
+    // Evaluate new quantities
+    wfnew = m_waveFunction->evaluate(X_new);
+    QFNew=m_waveFunction->computeQuantumForce(X_new, random_index);
+
+    // Compute greens function
+    part_1=X_old[random_index]-X_new[random_index]-0.5*m_timeStep*QFNew;
+    part_2=X_new[random_index]-X_old[random_index]-0.5*m_timeStep*QFOld;
+    greenRate=(part_2*part_2)-(part_1*part_1);
+
+    greenRate = exp(greenRate/(2*m_timeStep));
+    green_factor = greenRate*wfnew*wfnew/(wfold*wfold);
+
+    // Check if the step is accepted
+    if (UniformNumberGenerator(gen) <= green_factor) {
+        m_waveFunction->set_X(X_new);
+        return true;
+    }
+    else {
+        //Print the random index here and over, to see if it is the same index
+        X_old[random_index]=Position_old;
+        return false;
+    }
 
 }
 
 bool System::GibbsSampling() {
-    // Performing the actual Metropolis step for the Metropolis- Hastings
-    //algorithm: Choosing a particle at random and changing it's position 
-    // by a random amount, and checks if the step is accepted by the 
-    //Metropolis-Hastings test
+    // Performing Gibbs sampling
     
-    return true;
+    double randu, P, sigma;
+   vec O;
 
+    sigma = m_waveFunction->getSigma();
+    vec X = m_waveFunction->get_X();
+    vec m_h = m_waveFunction->get_h();
+    vec m_a = m_waveFunction->get_a();
+    vec m_b = m_waveFunction->get_b();
+    mat m_w = m_waveFunction->get_w();
+
+    // Get probability, P(h=1|x), of hidden values to equal 1, given the logistic sigmoid function
+    // Set hidden values equal to 0 if probability less than a randuom uniform variable
+    O = m_b + ((X.t()*m_w).t()) / (sigma*sigma);
+    for (int j=0; j < m_numberHiddenNodes; j++){
+        randu = getUniform(0, 1);
+        P = 1.0/(1+exp(-O[j]));     // probability from logistic sigmoid
+        if (P < randu){ m_h[j] = 0; }
+        else{ m_h[j] = 1; }
+    }
+
+    // Set the new positions according to the hidden nodes
+    double randn, x_mean;
+    vec new_pos, wh;
+    new_pos.zeros(m_numberVisibleNodes);
+
+    wh = m_w*m_h;
+    for (int i=0; i<m_numberVisibleNodes; i++){
+        x_mean = m_a[i] + wh[i];
+        new_pos[i] = getGaussian(x_mean, sigma);
+    }
+
+//    cout << "X before: " << endl; m_waveFunction->get_X().print();
+    m_waveFunction->set_X(new_pos);
+//    cout << "X after: " << endl; m_waveFunction->get_X().print();
+
+    return true;
 }
+    
 
 void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps, double lr){
     m_RBMCycles                 = RBMCycles;
     m_SGD= (new SGD(this, lr));
 
     //m_sampler                   = new Sampler(this);
-    //m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
+    m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
     //m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
 
     for (int rbm_cycle=0; rbm_cycle<RBMCycles; rbm_cycle++){
+        cout<<"RBM cycle: "<<rbm_cycle<<"\n------------------------------";
         m_sampler                   = new Sampler(this);
-        m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
+        //m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
         m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
         runMetropolisSteps();
         m_SGD->SGDOptimize(m_sampler->getGradient());
     }
-
 
 }
 void System::runMetropolisSteps() {
@@ -174,11 +253,7 @@ void System::setWaveFunction(WaveFunction* waveFunction) {
 void System::setInitialState(InitialState* initialState) {
     m_initialState = initialState;
 }
-/*
-void System::setOptimizer(SGD* learningRate) {
-    m_learningRate = learningRate;
-}
-*/
+
 void System::setSampleMethod(int sampleMethod) {
     m_sampleMethod = sampleMethod;
 }

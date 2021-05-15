@@ -11,6 +11,7 @@ public:
     double evaluate(vec position);
     double computeDoubleDerivative(vec position);
     double computeDerivative(vec position);
+    double computeQuantumForce(vec position, int index);
 
     //double sigmoid(double x);
     //double sigmoid_input(int x);

@@ -2,32 +2,33 @@
 #include <iostream>
 #include <armadillo>
 
-
+using namespace arma;
 
 class WaveFunction {
 public:
     WaveFunction(class System* system);
 
-    virtual double evaluate(arma::vec position)=0;
+    virtual double evaluate(vec position)=0;
     //void setupInitialState();
-    virtual double computeDoubleDerivative(arma::vec position)=0;
-    virtual double computeDerivative(arma::vec position)=0;
+    virtual double computeDoubleDerivative(vec position)=0;
+    virtual double computeDerivative(vec position)=0;
     //virtual double sigmoid(double x)=0;
     //virtual double sigmoid_input(int x)=0;
+    virtual double computeQuantumForce(vec position, int index)=0;
 
 
-    virtual void set_X(arma::vec X)=0;
-    virtual void set_h(arma::vec h)=0;
-    virtual void set_a(arma::vec a)=0;
-    virtual void set_b(arma::vec b)=0;
-    virtual void set_w(arma::mat w)=0;
+    virtual void set_X(vec X)=0;
+    virtual void set_h(vec h)=0;
+    virtual void set_a(vec a)=0;
+    virtual void set_b(vec b)=0;
+    virtual void set_w(mat w)=0;
 
-    virtual arma::vec get_X()=0;
-    virtual arma::vec get_h()=0;
-    virtual arma::vec get_a()=0;
-    virtual arma::vec get_b()=0;
+    virtual vec get_X()=0;
+    virtual vec get_h()=0;
+    virtual vec get_a()=0;
+    virtual vec get_b()=0;
     //This is actually a matrix. Use armadillo or eigen maybe?
-    virtual arma::mat get_w()=0;
+    virtual mat get_w()=0;
     virtual double getSigma()=0;
 
     //virtual void setupInitialState();
@@ -38,12 +39,12 @@ public:
   //  void setupInitialState() = 0;
 
 protected:
-    arma::vec m_x;      // visible nodes (i.e. position)
-    arma::vec m_h;      // hidden nodes
-    arma::vec m_a;      // visible bias
-    arma::vec m_b;      // hidden bias
+    vec m_x;      // visible nodes (i.e. position)
+    vec m_h;      // hidden nodes
+    vec m_a;      // visible bias
+    vec m_b;      // hidden bias
     //This is actually a matrix
-    arma::mat m_w;      // interaction of biases
+    mat m_w;      // interaction of biases
 
     double m_nv=0;
     double m_nh=0;

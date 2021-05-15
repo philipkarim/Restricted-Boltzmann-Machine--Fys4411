@@ -27,9 +27,9 @@ int main() {
     int cycles_RBM          = 20;
     int numberOfDimensions  = 2;            // Set amount of dimensions
     int numberOfParticles   = 2;            // Set amount of particles
-    int hidden_nodes        = 4;
+    int hidden_nodes        = 2;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
-    int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
+    int sampler_method      = 2;            //0=BF, 1=IS, 2=GS
     bool uniform_distr      = 0;            //0=Normal, 1=Uniform
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
@@ -60,5 +60,7 @@ int main() {
     return 0;
 }
 
+//Tasks:
+//-----------------------
 //Read through all code
 //Implement importance and gibbs and gibbs energy
