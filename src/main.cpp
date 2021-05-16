@@ -55,7 +55,7 @@ int main() {
     system->setSampleMethod             (sampler_method);
     system->setInteraction              (interaction);
     system->setgeneralwtf               (generalwtf);
-    system->runBoltzmannMachine         (cycles_RBM, numberOfSteps, learningRate);
+    system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);
 
     return 0;
 }

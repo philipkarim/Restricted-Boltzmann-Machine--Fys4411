@@ -6,7 +6,7 @@ using namespace arma;
 
 class SGD {
 public:
-    SGD(System* system, double eta);
+    SGD(System* system);
     void SGDOptimize(arma::vec parameters_derivative);
 
 private:

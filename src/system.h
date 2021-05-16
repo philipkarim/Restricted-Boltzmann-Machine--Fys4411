@@ -21,7 +21,7 @@ public:
     bool metropolisStepImportanceSampling();
     bool GibbsSampling();
 
-    void runBoltzmannMachine        (int RBMCycles, int numberOfMetropolisSteps, double lr);
+    void runBoltzmannMachine        (int RBMCycles, int numberOfMetropolisSteps);
     void runMetropolisSteps         ();
 
     void setNumberOfParticles       (int numberOfParticles);

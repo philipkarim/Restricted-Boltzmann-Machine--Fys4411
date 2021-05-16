@@ -172,7 +172,7 @@ bool System::GibbsSampling() {
 }
     
 
-void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps, double lr){
+void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
     m_RBMCycles                 = RBMCycles;
     m_SGD= (new SGD(this, lr));
 
