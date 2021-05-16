@@ -95,9 +95,8 @@ double HarmonicOscillator::particleDistance(int i, int j,  vec X_visible){
 
 //Harmonic Oscillator is done down to here:
 
-
-/* Compute the gradient of the local energy wrt. the RBM parameters, i.e. (1/psi)*d(psi)/d(alpha_i) */
-vec HarmonicOscillator::computeLocalEnergyGradient(){
+//Computes the derivative with respect to the different parameters, to be used in SGD
+vec HarmonicOscillator::computeParameterDerivatives(){
     //Defining some variables
     vec xx = m_system->getWaveFunction()->get_X();
     vec aa = m_system->getWaveFunction()->get_a();
@@ -109,6 +108,7 @@ vec HarmonicOscillator::computeLocalEnergyGradient(){
     int numberOfHN = m_system->getNumberOfHN();
 
     //Continue under and change name of the function to something easier
+    //Double check the formulas to get rid of uneccesarry computations .t
     vec O = bb + (xx.t()*ww).t()*(1/((double) sig*sig));
     vec dPsi; dPsi.zeros(numberOfVN + numberOfHN + numberOfVN*numberOfHN);
 

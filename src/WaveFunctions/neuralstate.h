@@ -8,10 +8,10 @@ using namespace arma;
 class NeuralState : public WaveFunction {
 public:
     NeuralState(class System* system, int part, int dim, double sigma);
-    double evaluate(vec position);
-    double computeDoubleDerivative(vec position);
-    double computeDerivative(vec position);
-    double computeQuantumForce(vec position, int index);
+    double evaluate(vec X_visible);
+    double computeDoubleDerivative(vec X_visible);
+    double computeDerivative(vec X_visible);
+    double computeQuantumForce(double X_visible_index);
 
     //double sigmoid(double x);
     //double sigmoid_input(int x);
@@ -31,34 +31,17 @@ public:
     mat get_w(){ return m_w; }
     
     double getSigma(){return m_sigma;}
-    //void setupInitialState();
 
-/*
-private:
 
-    arma::vec m_x;      // visible nodes (i.e. position)
-    arma::vec m_h;      // hidden nodes
-    arma::vec m_a;      // visible bias
-    arma::vec m_b;      // hidden bias
-    //This is actually a matrix
-    std::vector<vector<double>> m_w;      // interaction of biases
-*/
 private:
     double m_sigma;
-    vec m_x;      // visible nodes (i.e. position)
+    vec m_x;      // visible nodes (i.e. X_visible)
     vec m_h;      // hidden nodes
     vec m_a;      // visible bias
     vec m_b;      // hidden bias
     //This is actually a matrix
     mat m_w;      // interaction of biases
-    /*
-    double m_nv;
-    double m_nh;
-    double m_initialization;
-    
-    */
-    //Should this be here?
-    //void setupInitialState();
+
     double sigmoid(double x);
     double sigmoid_input(int x);
 };

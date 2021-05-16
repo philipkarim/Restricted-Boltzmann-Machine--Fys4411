@@ -7,14 +7,13 @@ using namespace arma;
 class SGD {
 public:
     SGD(System* system, double eta);
-    void SGDOptimize(arma::vec gradE);
+    void SGDOptimize(arma::vec parameters_derivative);
 
 private:
-    double m_eta;   // learning rate
-    arma::vec a;    // visible bias
-    arma::vec b;    // hidden bias
-    arma::mat w;    // interaction matrix between biases
+    double m_eta;
+    vec a;
+    vec b;
+    mat w;
 
     class System* m_system = nullptr;
-
 };

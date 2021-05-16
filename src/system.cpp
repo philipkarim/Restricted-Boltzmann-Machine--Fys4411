@@ -32,7 +32,7 @@ bool System::metropolisStep() {
     //Random integer generator
     random_device rd;
     mt19937_64 gen(rd());
-    uniform_int_distribution<int> distribution(0,m_numberOfVN-1);//-1?
+    uniform_int_distribution<int> distribution(0,m_numberOfVN-1);
     uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
 
     // Defining some variables to be used
@@ -78,7 +78,7 @@ bool System::metropolisStepImportanceSampling() {
     //Metropolis-Hastings test
 
     //Declaring vaiables to be used:
-    double Position_old, wfnew, wfold, part_1, part_2, rand_norm ,green_factor, step, greenRate=0;
+    double Position_old, wfnew, wfold, term_1, term_2, rand_norm ,green_factor, step, greenRate;
     int random_index;
     //Defining position and quantum force vectors
     //to be used in the importance sampling
@@ -99,17 +99,17 @@ bool System::metropolisStepImportanceSampling() {
     
     //Defining the values of the previous position
     wfold=m_waveFunction->evaluate(X_old);    
-    QFOld=m_waveFunction->computeQuantumForce(X_old, random_index);
+    QFOld=m_waveFunction->computeQuantumForce(X_old[random_index]);
     Position_old= X_new[random_index];
     X_new[random_index]+=QFOld*m_timeStep*0.5 + sqrt(m_timeStep)*rand_norm;
 
     // Evaluate new quantities
     wfnew = m_waveFunction->evaluate(X_new);
-    QFNew=m_waveFunction->computeQuantumForce(X_new, random_index);
+    QFNew=m_waveFunction->computeQuantumForce(X_new[random_index]);
 
     // Compute greens function
-    part_1=X_old[random_index]-X_new[random_index]-0.5*m_timeStep*QFNew;
-    part_2=X_new[random_index]-X_old[random_index]-0.5*m_timeStep*QFOld;
+    term_1=X_old[random_index]-X_new[random_index]-0.5*m_timeStep*QFNew;
+    term_2=X_new[random_index]-X_old[random_index]-0.5*m_timeStep*QFOld;
     greenRate=(part_2*part_2)-(part_1*part_1);
 
     greenRate = exp(greenRate/(2*m_timeStep));
@@ -132,7 +132,7 @@ bool System::GibbsSampling() {
     // Performing Gibbs sampling
     
     double randu, P, sigma;
-   vec O;
+    vec O;
 
     sigma = m_waveFunction->getSigma();
     vec X = m_waveFunction->get_X();

@@ -9,7 +9,7 @@ public:
     virtual double computeKineticEnergy(arma:: vec X_visible)=0;
     virtual double computeInteractingEnergy(arma:: vec X_visible)=0;
     virtual double particleDistance(int i, int j, arma:: vec X_visible)=0;
-    virtual arma::vec computeLocalEnergyGradient()=0;
+    virtual arma::vec computeParameterDerivatives()=0;
 
 protected:
     class System* m_system = nullptr;

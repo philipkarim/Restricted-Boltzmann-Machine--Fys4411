@@ -30,15 +30,15 @@ int main() {
     int hidden_nodes        = 2;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 2;            //0=BF, 1=IS, 2=GS
-    bool uniform_distr      = 0;            //0=Normal, 1=Uniform
+    bool uniform_distr      = 1;//Is normal only for gibbs?            //0=Normal, 1=Uniform
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
     bool interaction        = false;        // True-> interaction, False->Not interaction
-    double sigma_val        =1.0;
-    double initialization   =0.001;
-    double learningRate     =0.001;
+    double sigma_val        = 1.0;
+    double initialization   = 0.001;
+    double learningRate     = 0.001;
     //Write to file
     bool generalwtf        =false;          // General information- write to file
 
@@ -55,7 +55,7 @@ int main() {
     system->setSampleMethod             (sampler_method);
     system->setInteraction              (interaction);
     system->setgeneralwtf               (generalwtf);
-    system->runBoltzmannMachine          (cycles_RBM, numberOfSteps, learningRate);
+    system->runBoltzmannMachine         (cycles_RBM, numberOfSteps, learningRate);
 
     return 0;
 }
@@ -63,7 +63,19 @@ int main() {
 //Tasks:
 //-----------------------
 //Read through all code
-//Implement importance and gibbs and gibbs energy
+//Implement gibbs and gibbs energy
+//Move sigmoid in neural.h from private to public?
+//Cpdate quantum force the same way is in derivative since both is actually transposed
+/*
+Main—>Done
+system—>Evereything done but Gibbs sampling 
+Sampler—> Done
+Sgd—>Done-Just check a small thing
+Hamiltonians/—> everything done but the last function, need to check the pdf to get rid of transposes
+
+Wavefunctions/-> Done but QForce
+Initial states/—> Done
+*/
 
 
 /*

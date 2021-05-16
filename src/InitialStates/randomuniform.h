@@ -10,8 +10,8 @@ public:
     void setupInitialState();
 
 private:    
-    double m_nv;
-    double m_nh;
+    double numberOfVN;
+    double numberOfHN;
     double m_initialization;
     double m_sigma;
     bool m_normaldistr;

@@ -74,7 +74,7 @@ void Sampler::sample(bool acceptedStep) {
     m_cumulativeEnergy2+=(localEnergy*localEnergy);
 
     //Used in SGD
-    vec energy_derivate = m_system->getHamiltonian()->computeLocalEnergyGradient();
+    vec energy_derivate = m_system->getHamiltonian()->computeParameterDerivatives();
 
     m_cumulativeE_Lderiv+=energy_derivate;
     m_cumulativeE_Lderiv_expect+=energy_derivate*localEnergy;
@@ -86,15 +86,15 @@ void Sampler::sample(bool acceptedStep) {
 }
 
 void Sampler::printOutputToTerminal() {
-    //int     np = m_system->getNumberOfParticles();
-    //int     nd = m_system->getNumberOfDimensions();
+    int     np = m_system->getNumberOfParticles();
+    int     nd = m_system->getNumberOfDimensions();
     int     ms = m_system->getNumberOfMetropolisSteps();
     double  ef = m_system->getEquilibrationFraction();
 
     cout << endl;
     cout << "  -- System info -- " << endl;
-    //cout << " Number of particles  : " << np << endl;
-    //cout << " Number of dimensions : " << nd << endl;
+    cout << " Number of particles  : " << np << endl;
+    cout << " Number of dimensions : " << nd << endl;
     cout << " Number of Metropolis steps run : 10^" << std::log10(ms) << endl;
     cout << " Number of equilibration steps  : 10^" << std::log10(std::round(ms*ef)) << endl;
     cout << endl;
@@ -104,7 +104,6 @@ void Sampler::printOutputToTerminal() {
     cout << " Variance : " << m_variance << endl;
     cout << " Accepted step ratio : " << m_acceptRatio << endl;
     cout << endl;
-
 
 }
 
@@ -120,6 +119,7 @@ void Sampler::computeAverages() {
 
 }
 
+//Just checking if the variance is correct
 double Sampler::computeVariance(std::vector<double> x_sample, double x_mean){
     double var_sum=0;
     for (int i=0; i<m_acceptedSteps; i++){

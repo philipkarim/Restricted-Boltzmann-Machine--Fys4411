@@ -16,8 +16,8 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
                             double initialization):
         InitialState(system) {
     assert(n_hidden >= 0 && n_visible >= 0);
-    m_nh = n_hidden;
-    m_nv = n_visible;
+    numberOfHN = n_hidden;
+    numberOfVN = n_visible;
     m_normaldistr = gaussian;
     m_initialization = initialization;
 
@@ -33,62 +33,68 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
 }
 
 void RandomUniform::setupInitialState() {
-    vec initial_x(m_nv);      // visible nodes (i.e. position)
-    vec initial_h(m_nh);      // hidden nodes
-    vec initial_a(m_nv);      // visible bias
-    vec initial_b(m_nh);      // hidden bias
-    //This is actually a matrix
-    mat initial_w(m_nv, m_nh);      // interaction of biases
+    //Constructing the parametere vectors of their sizes:
+    //visible nodes
+    vec initial_x(numberOfVN);
+    //Hidden nodes
+    vec initial_h(numberOfHN);
+    //Visible biases
+    vec initial_a(numberOfVN);
+    //Hidden biases
+    vec initial_b(numberOfHN);
+    //weights of the connections between the hidden and visible nodes.
+    mat initial_w(numberOfVN, numberOfHN);
 
+    //Filling the parameters with zeros
     initial_x.zeros();
     initial_h.zeros();
     initial_a.zeros();
     initial_b.zeros();
     initial_w.zeros();
 
+    //Random generator
     random_device rd;
     mt19937_64 gen(rd());
 
     // Set up the distribution for x \in [[x, x],(can use multiple configurations)
     uniform_real_distribution<double> UniformNumberGenerator(-0.5,0.5);
+    //Uniform distributions
     uniform_real_distribution<double> uniform_weights(-m_initialization, m_initialization);
+    //Gaussian distriubution
     normal_distribution<double> normal_weights(0, m_initialization);
 
-    // initialize weights according to either a uniform or gaussian distribution
-    if (m_normaldistr == 0){
-        for (int i=0; i<m_nv; i++){
-            initial_a[i] = uniform_weights(gen);
-            for (int j=0; j<m_nh; j++){
-                initial_w(i, j) = uniform_weights(gen);
-            }
-        }
-
-        for (int j=0; j<m_nh; j++){
-            initial_b[j] = uniform_weights(gen);
-        }
-    }
-
-    else if (m_normaldistr == 1){
-        for (int i=0; i<m_nv; i++){
-            initial_a[i] = normal_weights(gen);
-            for (int j=0; j<m_nh; j++){
-                initial_w(i, j) = normal_weights(gen);
-            }
-        }
-
-        for (int j=0; j<m_nh; j++){
-            initial_b[j] = normal_weights(gen);
-        }
-    }
-
-    for (int i=0; i<m_nv; i++){
+    //Initializing positions from a uniform distribution
+    for (int i=0; i<numberOfVN; i++){
         initial_x[i] = UniformNumberGenerator(gen);
     }
 
+    // initializing uniform values
+    if (m_normaldistr == 0){
+        for (int i=0; i<numberOfVN; i++){
+            initial_a[i] = uniform_weights(gen);
+            for (int j=0; j<numberOfHN; j++){
+                initial_b[j] = uniform_weights(gen);
+                initial_w(i, j) = uniform_weights(gen);
+            }
+        }
+    }
+
+    // initializing gaussian values
+    else if (m_normaldistr == 1){
+        for (int i=0; i<numberOfVN; i++){
+            initial_a[i] = normal_weights(gen);
+            for (int j=0; j<numberOfHN; j++){
+                initial_b[j] = normal_weights(gen);
+                initial_w(i, j) = normal_weights(gen);
+            }
+        }
+    }
+
+    //Configuring the initialized parameters
+    m_system->getWaveFunction()->set_X(initial_x);
     m_system->getWaveFunction()->set_a(initial_a);
     m_system->getWaveFunction()->set_b(initial_b);
     m_system->getWaveFunction()->set_w(initial_w);
-    m_system->getWaveFunction()->set_X(initial_x);
     m_system->getWaveFunction()->set_h(initial_h);
 
 }
