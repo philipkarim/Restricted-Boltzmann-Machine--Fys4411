@@ -64,3 +64,10 @@ int main() {
 //-----------------------
 //Read through all code
 //Implement importance and gibbs and gibbs energy
+
+
+/*
+For compilers to find openblas you may need to set:
+  export LDFLAGS="-L/usr/local/opt/openblas/lib"
+  export CPPFLAGS="-I/usr/local/opt/openblas/include"
+*/
