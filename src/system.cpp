@@ -130,41 +130,43 @@ bool System::metropolisStepImportanceSampling() {
 
 bool System::GibbsSampling() {
     // Performing Gibbs sampling
-    
-    double randu, P, sigma;
-    vec O;
+    double random_uniform, sigmoid_probabillity, x_avg;
+    vec X_new_2;
+    vec weight_and_HN;
 
-    sigma = m_waveFunction->getSigma();
+    X_new_2.zeros(m_numberOfVN);
     vec X = m_waveFunction->get_X();
     vec m_h = m_waveFunction->get_h();
     vec m_a = m_waveFunction->get_a();
     vec m_b = m_waveFunction->get_b();
     mat m_w = m_waveFunction->get_w();
+    weight_and_HN = m_w*m_h;
 
-    // Get probability, P(h=1|x), of hidden values to equal 1, given the logistic sigmoid function
-    // Set hidden values equal to 0 if probability less than a randuom uniform variable
-    O = m_b + ((X.t()*m_w).t()) / (sigma*sigma);
-    for (int j=0; j < m_numberHiddenNodes; j++){
-        randu = getUniform(0, 1);
-        P = 1.0/(1+exp(-O[j]));     // probability from logistic sigmoid
-        if (P < randu){ m_h[j] = 0; }
-        else{ m_h[j] = 1; }
+    //Random integer generator
+    random_device rd;
+    mt19937_64 gen(rd());
+    uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
+    
+    for (int i=0; i < m_numberOfHN; i++){
+        random_uniform =UniformNumberGenerator(gen);
+        sigmoid_probabillity=m_wavefunction->sigmoid(m_waveFunction->sigmoid_input(i));
+
+        if (sigmoid_probabillity >= random_uniform){
+            m_h[i] = 1;}
+        else{
+            m_h[i] = 0;}
     }
 
-    // Set the new positions according to the hidden nodes
-    double randn, x_mean;
-    vec new_pos, wh;
-    new_pos.zeros(m_numberVisibleNodes);
-
-    wh = m_w*m_h;
-    for (int i=0; i<m_numberVisibleNodes; i++){
-        x_mean = m_a[i] + wh[i];
-        new_pos[i] = getGaussian(x_mean, sigma);
+    //New positions
+    for (int j=0; j<m_numberOfVN; j++){
+        x_avg = m_a[j] + wh[j];
+        normal_distribution<double> Normaldistribution(x_avg, m_waveFunction->getSigma());
+        random_normal=Normaldistribution(gen);
+        //Filling up the new X with positions
+        X_new_2[j] = random_normal;
     }
 
-//    cout << "X before: " << endl; m_waveFunction->get_X().print();
-    m_waveFunction->set_X(new_pos);
-//    cout << "X after: " << endl; m_waveFunction->get_X().print();
+    m_waveFunction->set_X(X_new_2);
 
     return true;
 }

@@ -62,10 +62,17 @@ int main() {
 
 //Tasks:
 //-----------------------
-//Read through all code
-//Implement gibbs and gibbs energy
+//Read through all code-->Done almost
+//Implement gibbs sampling-->Done
+//Implement Gibbs energy--> Done but not sure if it is correct
 //Move sigmoid in neural.h from private to public?
-//Cpdate quantum force the same way is in derivative since both is actually transposed
+//Update quantum force the same way is in derivative since both is actually transposed
+//Try and see if hidden nodes are updates now with different distribution
+
+//If all results makes sense it is time to extract the results, compute the results needed:
+  //Write to files the things we want
+  //Compute the energy by blocking method
+  //Plot things
 /*
 Main—>Done
 system—>Evereything done but Gibbs sampling 

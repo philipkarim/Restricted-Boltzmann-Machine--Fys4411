@@ -20,9 +20,6 @@ double HarmonicOscillator::computeLocalEnergy() {
   //This function is computing the kinetic and potential energies
   vec X_visible=m_system->getWaveFunction()->get_X();
 
-  //cout<<"___________________ \n";
-  //cout<<X_visible;
-
   //Defining some variables to be used in the calculations 
   double potentialEnergy = 0;
   double kineticEnergy   = 0;
@@ -59,8 +56,14 @@ double HarmonicOscillator::computePotentialEnergy(vec X_visible) {
 
 double HarmonicOscillator::computeKineticEnergy(vec X_visible){
   double double_derivative, derivative;
-  double_derivative=m_system->getWaveFunction()->computeDoubleDerivative(X_visible);
-  derivative       =m_system->getWaveFunction()->computeDerivative(X_visible);
+  if(m_system->getSampleMethod()==2){
+    double_derivative=0.5*m_system->getWaveFunction()->computeDoubleDerivative(X_visible);
+    derivative       =0.5*m_system->getWaveFunction()->computeDerivative(X_visible);
+  }
+  else{
+    double_derivative=m_system->getWaveFunction()->computeDoubleDerivative(X_visible);
+    derivative       =m_system->getWaveFunction()->computeDerivative(X_visible);
+  }
 
   return -0.5*(derivative*derivative+double_derivative);
 
