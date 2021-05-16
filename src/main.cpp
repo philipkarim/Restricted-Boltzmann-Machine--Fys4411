@@ -67,6 +67,7 @@ int main() {
 //Implement Gibbs energy--> Done but not sure if it is correct
 //Move sigmoid in neural.h from private to public?
 //Update quantum force the same way is in derivative since both is actually transposed
+//Add an convergence tol in SGD to stop the algorithm
 //Try and see if hidden nodes are updates now with different distribution
 
 //If all results makes sense it is time to extract the results, compute the results needed:
