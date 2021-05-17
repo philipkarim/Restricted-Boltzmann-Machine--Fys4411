@@ -11,9 +11,6 @@ public:
 
 private:
     double m_eta;
-    vec a;
-    vec b;
-    mat w;
 
     class System* m_system = nullptr;
 };

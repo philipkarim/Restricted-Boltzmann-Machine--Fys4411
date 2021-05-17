@@ -55,6 +55,9 @@ double NeuralState::computeDoubleDerivative(vec X_visible) {
         sum_M+=sum_N;
     }
 
+    //cout<<"--"<<m_h<<"--";
+
+
     return sum_M;
 }
 
@@ -70,6 +73,7 @@ double NeuralState::computeDerivative(vec X_visible) {
         }
         first_sum+=sec_sum;
     }
+    
     return first_sum;
   }
 
@@ -91,17 +95,16 @@ double NeuralState::sigmoid_input(int x){
 
 //Computes the quantum force for the given X node at the given index.
 //This is usen inimportance sampling
-double NeuralState::computeQuantumForce(double X_visible_index){
-
-    arma::vec O = m_b + (m_x.t()*m_w).t()/(m_sigma*m_sigma);
-
-    double deriv=0.0;
-    double sum1 = 0.0;
-
-    for(int i=0; i<m_system->getNumberOfVN(); i++){
-        sum1 += m_w(index, i)/(m_sigma*m_sigma*(1.0+exp(-O[i])));
+double NeuralState::computeQuantumForce(double X_visible_index, int index){
+    double first_sum=0;
+    double sec_sum=0;
+    
+    for (int i =0; i<m_system->getNumberOfVN(); i++){
+        first_sum-=(X_visible_index-m_a[index])/(m_sigma*m_sigma);
+        for (int j=0; j<m_system->getNumberOfHN(); j++){
+            sec_sum+=m_w(i,j)/(m_sigma*m_sigma)*sigmoid(sigmoid_input(j));
+        }
+        first_sum+=sec_sum;
     }
-    deriv = -(X_visible_index-m_a[index])/(m_sigma*m_sigma) + sum1/(m_sigma*m_sigma);
-
-    return 2*deriv;
-}
+    return first_sum;
+  }

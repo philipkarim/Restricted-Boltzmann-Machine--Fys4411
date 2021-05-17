@@ -10,8 +10,7 @@ public:
     double computePotentialEnergy(arma::vec X_visible);
     double computeKineticEnergy(arma:: vec X_visible);
     double computeInteractingEnergy(arma:: vec X_visible);
-    double particleDistance(int i, int j, arma:: vec X_visible);
-    virtual arma::vec computeParameterDerivatives();
+    arma::vec computeParameterDerivatives();
 
 
 

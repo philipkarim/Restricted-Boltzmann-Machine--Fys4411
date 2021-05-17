@@ -11,9 +11,9 @@ public:
     virtual double evaluate(vec X_visible)=0;
     virtual double computeDoubleDerivative(vec X_visible)=0;
     virtual double computeDerivative(vec X_visible)=0;
-    //virtual double sigmoid(double x)=0;
-    //virtual double sigmoid_input(int x)=0;
-    virtual double computeQuantumForce(double X_visible_index)=0;
+    virtual double sigmoid(double x)=0;
+    virtual double sigmoid_input(int x)=0;
+    virtual double computeQuantumForce(double X_visible_index, int index)=0;
 
     virtual void set_X(vec X)=0;
     virtual void set_h(vec h)=0;
@@ -36,8 +36,8 @@ protected:
     mat m_w;
 
     class System* m_system = nullptr;
-private:
-    virtual double sigmoid(double x)=0;
-    virtual double sigmoid_input(int x)=0;
+//private:
+    //virtual double sigmoid(double x)=0;
+    //virtual double sigmoid_input(int x)=0;
 
 };

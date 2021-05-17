@@ -22,35 +22,35 @@ void SGD::SGDOptimize(vec parameters_derivative){
     int numberOfVN = m_system->getNumberOfVN();
     int numberOfHN = m_system->getNumberOfHN();
     //Parameters to be optimized
-    a_visible = m_system->getWaveFunction()->get_a();
-    b_hidden = m_system->getWaveFunction()->get_b();
-    w_weight = m_system->getWaveFunction()->get_w();
+    vec a_visible = m_system->getWaveFunction()->get_a();
+    vec b_hidden = m_system->getWaveFunction()->get_b();
+    mat w_weight = m_system->getWaveFunction()->get_w();
     
 
     // Computes new visible biases by looping over the first elements in the parameter vector
     for (int i=0; i<numberOfVN; i++){
-        a_visible[i] = a_visible[i] - lr*parameters_derivative[i];
+        a_visible[i] -= lr*parameters_derivative[i];
     }
     
     // Computes new hidden biases by looping over the middle elements in the parameter vector
     for (int j=0; j<numberOfHN; j++){
         index_b=numberOfVN + j;
-        b_hidden[j] = b_hidden[j] - lr*parameters_derivative[index_b];
+        b_hidden[j] -= lr*parameters_derivative[index_b];
 
     }
     // Computes new weights by looping over the last elements in the parameter vector
-    int index_w = numberOfHN + numberOfVN;
+    index_w = numberOfHN + numberOfVN;
     //Not sure if the loops actually breaks or gets all elements, test when I get home
     for (int k=0; k<numberOfVN; k++){
         for (int l=0; l<numberOfHN; l++){
-            w_weight(k, l) = w_weight(k, l) - lr*parameters_derivative[index_w];
+            w_weight(k, l) -= lr*parameters_derivative[index_w];
             index_w++;
             if (index_w==parameters_derivative.n_elem){
+                std::cout<<"BREAK due to SGD loop!";
                 break;
             }
+            index_w++;
         }
-    }
-    index_w++;
     }
 
     // Changing the old parameters into the new ones

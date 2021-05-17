@@ -99,18 +99,18 @@ bool System::metropolisStepImportanceSampling() {
     
     //Defining the values of the previous position
     wfold=m_waveFunction->evaluate(X_old);    
-    QFOld=m_waveFunction->computeQuantumForce(X_old[random_index]);
+    QFOld=m_waveFunction->computeQuantumForce(X_old[random_index], random_index);
     Position_old= X_new[random_index];
     X_new[random_index]+=QFOld*m_timeStep*0.5 + sqrt(m_timeStep)*rand_norm;
 
     // Evaluate new quantities
     wfnew = m_waveFunction->evaluate(X_new);
-    QFNew=m_waveFunction->computeQuantumForce(X_new[random_index]);
+    QFNew=m_waveFunction->computeQuantumForce(X_new[random_index], random_index);
 
     // Compute greens function
     term_1=X_old[random_index]-X_new[random_index]-0.5*m_timeStep*QFNew;
     term_2=X_new[random_index]-X_old[random_index]-0.5*m_timeStep*QFOld;
-    greenRate=(part_2*part_2)-(part_1*part_1);
+    greenRate=(term_2*term_2)-(term_1*term_1);
 
     greenRate = exp(greenRate/(2*m_timeStep));
     green_factor = greenRate*wfnew*wfnew/(wfold*wfold);
@@ -130,7 +130,7 @@ bool System::metropolisStepImportanceSampling() {
 
 bool System::GibbsSampling() {
     // Performing Gibbs sampling
-    double random_uniform, sigmoid_probabillity, x_avg;
+    double random_uniform, sigmoid_probabillity, x_avg, random_normal;
     vec X_new_2;
     vec weight_and_HN;
 
@@ -149,7 +149,7 @@ bool System::GibbsSampling() {
     
     for (int i=0; i < m_numberOfHN; i++){
         random_uniform =UniformNumberGenerator(gen);
-        sigmoid_probabillity=m_wavefunction->sigmoid(m_waveFunction->sigmoid_input(i));
+        sigmoid_probabillity=m_waveFunction->sigmoid(m_waveFunction->sigmoid_input(i));
 
         if (sigmoid_probabillity >= random_uniform){
             m_h[i] = 1;}
@@ -159,7 +159,7 @@ bool System::GibbsSampling() {
 
     //New positions
     for (int j=0; j<m_numberOfVN; j++){
-        x_avg = m_a[j] + wh[j];
+        x_avg = m_a[j] + weight_and_HN[j];
         normal_distribution<double> Normaldistribution(x_avg, m_waveFunction->getSigma());
         random_normal=Normaldistribution(gen);
         //Filling up the new X with positions
@@ -174,7 +174,7 @@ bool System::GibbsSampling() {
 
 void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
     m_RBMCycles                 = RBMCycles;
-    m_SGD= (new SGD(this, lr));
+    m_SGD= (new SGD(this));
 
     //m_sampler                   = new Sampler(this);
     m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
@@ -202,7 +202,7 @@ void System::runMetropolisSteps() {
         acceptedStep = metropolisStepImportanceSampling();
       }
       else if(m_sampleMethod==2){
-        acceptedStep = metropolisStepImportanceSampling();
+        acceptedStep = GibbsSampling();
       }
       else{
           cout<<"---No sampling method chosen---";

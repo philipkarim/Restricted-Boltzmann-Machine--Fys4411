@@ -18,7 +18,7 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
     assert(n_hidden >= 0 && n_visible >= 0);
     numberOfHN = n_hidden;
     numberOfVN = n_visible;
-    m_normaldistr = gaussian;
+    m_uniform = gaussian;
     m_initialization = initialization;
 
     /* The Initial State class is in charge of everything to do with the
@@ -69,7 +69,7 @@ void RandomUniform::setupInitialState() {
     }
 
     // initializing uniform values
-    if (m_normaldistr == 0){
+    if (m_uniform == true){
         for (int i=0; i<numberOfVN; i++){
             initial_a[i] = uniform_weights(gen);
             for (int j=0; j<numberOfHN; j++){
@@ -80,7 +80,7 @@ void RandomUniform::setupInitialState() {
     }
 
     // initializing gaussian values
-    else if (m_normaldistr == 1){
+    else if (m_uniform == false){
         for (int i=0; i<numberOfVN; i++){
             initial_a[i] = normal_weights(gen);
             for (int j=0; j<numberOfHN; j++){

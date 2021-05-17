@@ -14,7 +14,7 @@ private:
     double numberOfHN;
     double m_initialization;
     double m_sigma;
-    bool m_normaldistr;
+    bool m_uniform;
 
 
 };

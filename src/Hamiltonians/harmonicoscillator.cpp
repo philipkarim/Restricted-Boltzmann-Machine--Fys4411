@@ -17,14 +17,13 @@ HarmonicOscillator::HarmonicOscillator(System* system, double omega) :
 }
 
 double HarmonicOscillator::computeLocalEnergy() {
-  //This function is computing the kinetic and potential energies
+  //This function is computing the kinetic, potential and interaction energies
   vec X_visible=m_system->getWaveFunction()->get_X();
 
   //Defining some variables to be used in the calculations 
   double potentialEnergy = 0;
   double kineticEnergy   = 0;
   double interactionEnergy=0;
-  //Evaluating the wave function
 
   kineticEnergy=computeKineticEnergy(X_visible);
   potentialEnergy=computePotentialEnergy(X_visible);
@@ -32,25 +31,22 @@ double HarmonicOscillator::computeLocalEnergy() {
   if (m_system->getInteraction()==true){
     interactionEnergy=computeInteractingEnergy(X_visible);
   }
-  else{
-    interactionEnergy=0;
-    }
-  
+
   return kineticEnergy+potentialEnergy+interactionEnergy;
   }
    
 double HarmonicOscillator::computePotentialEnergy(vec X_visible) {
   //Potential energy
   //Defining some variables to be used
-  double potentialEnergy=0;
-    
-    //    int particleCounter = 0;
-    for(int i = 0; i<m_system->getNumberOfVN(); i++){
-        potentialEnergy += X_visible[i]*X_visible[i];
+  double potentialEnergy2=0;
+  int dimension=m_system->getNumberOfDimensions();
+    for (int i=0; i<m_system->getNumberOfVN(); i+=dimension){
+        for (int j=0; j<dimension; j++){
+            potentialEnergy2 += X_visible[i+j]*X_visible[i+j];
+        }
     }
-
-    //Returning the potential energy
-    return potentialEnergy*0.5*m_omega*m_omega;
+    potentialEnergy2 *= m_omega*m_omega*0.5;
+    return potentialEnergy2;
 
 }
 
@@ -72,67 +68,63 @@ double HarmonicOscillator::computeKineticEnergy(vec X_visible){
 double HarmonicOscillator::computeInteractingEnergy( vec X_visible){
   //Computing the interacting energy, sends in two particles
   int n_particles=m_system->getNumberOfParticles();
-  double distance;
-  double inter_energ;
-  for (int i_1=0; i_1<n_particles-1; i_1++){
-    for(int i_2=i_1+1; i_2<n_particles; i_2++){
-      distance = particleDistance(i_1,i_2, X_visible);
-      inter_energ+= 1./distance;
-    }
-  }  
-  return inter_energ;
+  int dimension = m_system->getNumberOfDimensions();
+  double interactingEnergy2, product_term;
+  double norm = 0;
 
+  for (int i=1; i<m_system->getNumberOfParticles(); i++){
+    for (int j=0; j<i; j++){
+      for (int dim=0; dim<dimension; dim++){
+        product_term=X_visible[dimension*i + dim] - X_visible[dimension*j + dim];
+        norm += product_term*product_term;
+      }
+        interactingEnergy2 += 1/sqrt(norm);
+    }
+  }
+  return interactingEnergy2;
 }
 
-double HarmonicOscillator::particleDistance(int i, int j,  vec X_visible){
-    int dims = m_system->getNumberOfDimensions();
-    double norm=0;
-    double part_1, part_2;
-    for(int d = 0; d<dims; d++){
-        part_1=X_visible[dims*i+d]-X_visible[dims*j+d];
-        part_2=X_visible[dims*i+d]-X_visible[dims*j+d];
-        norm+= part_1*part_2;
-    }
-    return sqrt(norm);
-}
-
-//Harmonic Oscillator is done down to here:
 
 //Computes the derivative with respect to the different parameters, to be used in SGD
 vec HarmonicOscillator::computeParameterDerivatives(){
     //Defining some variables
+    int numberOfVN = m_system->getNumberOfVN();
+    int numberOfHN = m_system->getNumberOfHN();
+    double sig = m_system->getWaveFunction()->getSigma();
+    double sig_input3, sig_input2;
+
     vec xx = m_system->getWaveFunction()->get_X();
     vec aa = m_system->getWaveFunction()->get_a();
     vec bb = m_system->getWaveFunction()->get_b();
     mat ww = m_system->getWaveFunction()->get_w();
-    double sig = m_system->getWaveFunction()->getSigma();
 
-    int numberOfVN = m_system->getNumberOfVN();
-    int numberOfHN = m_system->getNumberOfHN();
+    vec derivate_parameter_vec; derivate_parameter_vec.zeros(numberOfVN + numberOfHN + numberOfVN*numberOfHN);
 
-    //Continue under and change name of the function to something easier
-    //Double check the formulas to get rid of uneccesarry computations .t
-    vec O = bb + (xx.t()*ww).t()*(1/((double) sig*sig));
-    vec dPsi; dPsi.zeros(numberOfVN + numberOfHN + numberOfVN*numberOfHN);
-
-    // compute d(psi)/d(a)*1/psi
+    //derived with respect to a
     for (int i=0; i<numberOfVN; i++){
-        dPsi[i] = (xx[i] - aa[i])/(sig*sig);
+        derivate_parameter_vec[i] = (xx[i] - aa[i])/(sig*sig);
     }
 
-    // compute d(psi)/d(b)*1/psi
-    for (int i=numberOfVN; i<numberOfVN+numberOfHN; i++){
-        dPsi[i] = 1.0/(exp(-O[i - numberOfVN]) + 1);
-    }
+    //derived with respect to b
+    int last_loop=numberOfVN+numberOfHN;
+    for (int j=numberOfVN; j<last_loop; j++){
+      sig_input2=m_system->getWaveFunction()->sigmoid_input(j-numberOfVN);
+      derivate_parameter_vec[j]=m_system->getWaveFunction()->sigmoid(sig_input2);
+      }
 
-    // compute d(psi)/d(w)*1/psi
-    int i = numberOfVN + numberOfHN;
-    for (int j=0; j<numberOfVN; j++){
-        for (int k=0; k<numberOfHN; k++){
-            dPsi[i] = xx[j]/(exp(-O[k]) + 1)*(1.0/sig*sig);
-            i++;
+    //derived with respect to w
+    int k = last_loop;
+    for (int l=0; l<numberOfVN; l++){
+        for (int m=0; m<numberOfHN; m++){
+            sig_input3=m_system->getWaveFunction()->sigmoid_input(m);
+            derivate_parameter_vec[k] = xx[l]/(sig*sig)*m_system->getWaveFunction()->sigmoid_input(sig_input3);
+            k++;
         }
     }
-
-    return dPsi;
+    if(m_system->getSampleMethod()==2){
+      return derivate_parameter_vec*0.5;
+    }
+    else{
+      return derivate_parameter_vec;
+    }
 }

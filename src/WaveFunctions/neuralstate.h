@@ -11,10 +11,10 @@ public:
     double evaluate(vec X_visible);
     double computeDoubleDerivative(vec X_visible);
     double computeDerivative(vec X_visible);
-    double computeQuantumForce(double X_visible_index);
+    double computeQuantumForce(double X_visible_index, int index);
 
-    //double sigmoid(double x);
-    //double sigmoid_input(int x);
+    double sigmoid(double x);
+    double sigmoid_input(int x);
 
     void set_X(vec X){ m_x = X; }
     void set_h(vec h){ m_h = h; }
@@ -42,6 +42,4 @@ private:
     //This is actually a matrix
     mat m_w;      // interaction of biases
 
-    double sigmoid(double x);
-    double sigmoid_input(int x);
 };
