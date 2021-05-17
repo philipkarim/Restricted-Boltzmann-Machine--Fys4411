@@ -9,7 +9,7 @@ class NeuralState : public WaveFunction {
 public:
     NeuralState(class System* system, int part, int dim, double sigma);
     double evaluate(vec X_visible);
-    double computeDoubleDerivative(vec X_visible);
+    double computeDoubleDerivative();
     double computeDerivative(vec X_visible);
     double computeQuantumForce(double X_visible_index, int index);
 

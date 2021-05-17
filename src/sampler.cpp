@@ -62,7 +62,7 @@ void Sampler::sample(bool acceptedStep) {
 
     //Saving values to be used in blocking
     //Metropolis steps are 2^n, performs blocking on 2^(n-1) because of the equilibration factor
-    if (meanenergy_list.size()<m_system->getNumberOfMetropolisSteps()/2){
+    if (int(meanenergy_list.size())<int(m_system->getNumberOfMetropolisSteps()/2)){
       meanenergy_list.push_back(localEnergy);
     }
 
@@ -95,8 +95,8 @@ void Sampler::printOutputToTerminal() {
     cout << "  -- System info -- " << endl;
     cout << " Number of particles  : " << np << endl;
     cout << " Number of dimensions : " << nd << endl;
-    cout << " Number of Metropolis steps run : 10^" << std::log10(ms) << endl;
-    cout << " Number of equilibration steps  : 10^" << std::log10(std::round(ms*ef)) << endl;
+    cout << " Number of Metropolis steps run : 10^" << log10(ms) << endl;
+    cout << " Number of equilibration steps  : 10^" << log10(round(ms*ef)) << endl;
     cout << endl;
     cout << "  -- Results -- " << endl;
     cout << " CPU time: " << time_sec << " s" << endl;
@@ -120,7 +120,7 @@ void Sampler::computeAverages() {
 }
 
 //Just checking if the variance is correct
-double Sampler::computeVariance(std::vector<double> x_sample, double x_mean){
+double Sampler::computeVariance(vector<double> x_sample, double x_mean){
     double var_sum=0;
     for (int i=0; i<m_acceptedSteps; i++){
         var_sum+=pow((x_sample[i]-x_mean),2);
@@ -134,9 +134,23 @@ double Sampler::computeVariance(std::vector<double> x_sample, double x_mean){
 //Benchmarking results
 void Sampler::writeToFile(){
   ofstream myfile, myfiletime;
-  string folderpart1, folderpart2, method;
+  string folderpart1, distribution_part, method, interaction_part;
 
   int sample_method=m_system->getSampleMethod();
+
+  if(m_system->getInteraction()){
+    interaction_part="interaction";
+  }
+  else{
+    interaction_part="no_interaction";
+  }
+
+  if(m_system->getDistribution()){
+    distribution_part="uniform_distribution";
+  }
+  else{
+    distribution_part="normal_distribution";
+  }
 
   if (sample_method==0){
     method="bruteforce";
@@ -148,13 +162,15 @@ void Sampler::writeToFile(){
     method="gibbs";
   }
 
-  folderpart1 ="Results/"+method+"/";
+  folderpart1 ="Results/"+interaction_part+"/"+method+"/"+distribution_part+"/";
 
   int parti= m_system->getNumberOfParticles();
   int dimen= m_system->getNumberOfDimensions();
+  int HN= m_system->getNumberOfHN();
+  double lr=m_system->getLearningRate();
 
-  std::string filename=folderpart1+"N="+std::to_string(parti)+"Dim="+std::to_string(dimen);
-  std::string filenametime=folderpart1+"time/"+"N="+std::to_string(parti)+"Dim="+std::to_string(dimen);
+  string filename=folderpart1+"N="+to_string(parti)+"D="+to_string(dimen)+"HN="+to_string(HN)+"lr="+to_string((int)round(lr*1000));
+  string filenametime=folderpart1+"time/"+"N="+to_string(parti)+"D="+to_string(dimen)+"HN="+to_string(HN)+"lr="+to_string(round(lr*1000));
 
   myfile.open(filename);
   myfiletime.open(filenametime);
@@ -163,8 +179,8 @@ void Sampler::writeToFile(){
   myfiletime<<time_sec<<endl;
   myfiletime.close();
 
-  for(int i=0; i<meanenergy_list.size(); i++){
-    myfile<< std::fixed << std::setprecision(8) <<meanenergy_list[i]<<endl;
+  for(int i=0; i<int(meanenergy_list.size()); i++){
+    myfile<< fixed << setprecision(8) <<meanenergy_list[i]<<endl;
   }
   cout << "Done!"<<endl;
   cout<<endl;
@@ -176,23 +192,23 @@ void Sampler::writeToFile(){
 
 /*
 //Step sizes and time steps written to file
-void Sampler::writeToFileSteps(std::vector<int> steps_list, std::vector<double> meanEL_list){
+void Sampler::writeToFileSteps(vector<int> steps_list, vector<double> meanEL_list){
   ofstream myfile4;
   string folderpart1, folderpart2;
   
   if (m_system->getBruteforce()==true){
     folderpart1="Results/steps/bruteforce/";
-    folderpart2="steplength"+std::to_string(m_system->getStepLength());
+    folderpart2="steplength"+to_string(m_system->getStepLength());
   }
   else {
     folderpart1 ="Results/steps/importancesampling/";
-    folderpart2="timestep"+std::to_string(m_system->getTimeStep());
+    folderpart2="timestep"+to_string(m_system->getTimeStep());
   }
 
   int parti= m_system->getNumberOfParticles();
   int dimen= m_system->getNumberOfDimensions();
 
-  std::string filename=folderpart1+folderpart2+"N"+std::to_string(parti)+"Dim"+std::to_string(dimen)+".txt";
+  string filename=folderpart1+folderpart2+"N"+to_string(parti)+"Dim"+to_string(dimen)+".txt";
   myfile4.open(filename);
   cout << "Steps and energies are being written to file.."<<endl;
   for(int i=0; i<steps_list.size(); i++){

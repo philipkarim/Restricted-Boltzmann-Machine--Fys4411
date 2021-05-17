@@ -16,14 +16,7 @@ public:
     double getVariance()          { return m_variance; }
     double getAcceptRatio()          { return m_acceptRatio; }
     
-    //double getCumulativeEnergyDerivAvg()          { return m_E_Lderiv; }
-    //double getCumulativeEnergyDerivExpectAvg()          { return m_E_Lderiv_expect; }
-
-    //double getEnergy_Der2()          { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
     vec getGradient()             { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
-
-
-    //double getGradientDecentValues()        { return m_cumulativeEnergy, m_cumulativeE_Lderiv, m_cumulativeE_Lderiv_expect; }
 
 private:
     int     m_numberOfMetropolisSteps = 0;

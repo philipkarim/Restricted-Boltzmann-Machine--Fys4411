@@ -53,11 +53,11 @@ double HarmonicOscillator::computePotentialEnergy(vec X_visible) {
 double HarmonicOscillator::computeKineticEnergy(vec X_visible){
   double double_derivative, derivative;
   if(m_system->getSampleMethod()==2){
-    double_derivative=0.5*m_system->getWaveFunction()->computeDoubleDerivative(X_visible);
+    double_derivative=0.5*m_system->getWaveFunction()->computeDoubleDerivative();
     derivative       =0.5*m_system->getWaveFunction()->computeDerivative(X_visible);
   }
   else{
-    double_derivative=m_system->getWaveFunction()->computeDoubleDerivative(X_visible);
+    double_derivative=m_system->getWaveFunction()->computeDoubleDerivative();
     derivative       =m_system->getWaveFunction()->computeDerivative(X_visible);
   }
 
@@ -67,7 +67,6 @@ double HarmonicOscillator::computeKineticEnergy(vec X_visible){
 
 double HarmonicOscillator::computeInteractingEnergy( vec X_visible){
   //Computing the interacting energy, sends in two particles
-  int n_particles=m_system->getNumberOfParticles();
   int dimension = m_system->getNumberOfDimensions();
   double interactingEnergy2, product_term;
   double norm = 0;

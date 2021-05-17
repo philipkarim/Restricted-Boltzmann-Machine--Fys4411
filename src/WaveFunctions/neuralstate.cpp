@@ -32,7 +32,7 @@ double NeuralState::evaluate(vec X_visible) {
 
     for (int j=0; j<m_system->getNumberOfHN(); j++){
         for (int ii=0; ii<m_system->getNumberOfVN(); ii++){
-            sum_in_product+=(X_visible[ii]*m_w[ii, j])/(m_sigma*m_sigma);
+            sum_in_product+=(X_visible[ii]*m_w(ii, j))/(m_sigma*m_sigma);
             product_term*=(1+exp(m_b[j]+sum_in_product));
         }
     }
@@ -42,7 +42,7 @@ double NeuralState::evaluate(vec X_visible) {
 }
 
 //Computes the value of the double derivative. (This is only one part of the energy)
-double NeuralState::computeDoubleDerivative(vec X_visible) {
+double NeuralState::computeDoubleDerivative() {
     double sum_M=0;
     double sum_N=0;
     double sig_inp;
@@ -54,9 +54,6 @@ double NeuralState::computeDoubleDerivative(vec X_visible) {
         }
         sum_M+=sum_N;
     }
-
-    //cout<<"--"<<m_h<<"--";
-
 
     return sum_M;
 }

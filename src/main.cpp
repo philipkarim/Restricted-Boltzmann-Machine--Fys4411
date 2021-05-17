@@ -23,14 +23,14 @@ int main() {
     //Correct approx: 18, 50, 1, 1, 4, 0.001
 
   //20 gives good results
-    int numberOfSteps       = (int) pow(2,20); //Amount of metropolis steps
-    int cycles_RBM          = 20;
-    int numberOfDimensions  = 2;            // Set amount of dimensions
-    int numberOfParticles   = 2;            // Set amount of particles
-    int hidden_nodes        = 4;
+    int numberOfSteps       = (int) pow(2,13); //Amount of metropolis steps
+    int cycles_RBM          = 10;
+    int numberOfDimensions  = 1;            // Set amount of dimensions
+    int numberOfParticles   = 1;            // Set amount of particles
+    int hidden_nodes        = 2;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
-    bool uniform_distr      = false;//Is normal only for gibbs?            //Normal=false, Uniform=true
+    bool uniform_distr      = true;//Is normal only for gibbs?            //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
@@ -40,7 +40,7 @@ int main() {
     double initialization   = 0.001;
     double learningRate     = 0.001;
     //Write to file
-    bool generalwtf        =false;          // General information- write to file
+    bool generalwtf        =true;          // General information- write to file
 
     //Setting the different values defined higher in the code
     System* system = new System(seed);

@@ -26,6 +26,7 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
      * nodes and the number of the distribution used. To make sure everything
      * works as intended, this information is passed to the system here.
      */
+    m_system->setDistribution(gaussian);
     m_system->setNumberOfHN(n_hidden);
     m_system->setNumberOfVN(n_visible);
 
@@ -69,7 +70,7 @@ void RandomUniform::setupInitialState() {
     }
 
     // initializing uniform values
-    if (m_uniform == true){
+    if (m_system->getDistribution() == true){
         for (int i=0; i<numberOfVN; i++){
             initial_a[i] = uniform_weights(gen);
             for (int j=0; j<numberOfHN; j++){
@@ -80,7 +81,7 @@ void RandomUniform::setupInitialState() {
     }
 
     // initializing gaussian values
-    else if (m_uniform == false){
+    else if (m_system->getDistribution()==false){
         for (int i=0; i<numberOfVN; i++){
             initial_a[i] = normal_weights(gen);
             for (int j=0; j<numberOfHN; j++){

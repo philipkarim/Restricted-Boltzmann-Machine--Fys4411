@@ -9,7 +9,7 @@ public:
     WaveFunction(class System* system);
 
     virtual double evaluate(vec X_visible)=0;
-    virtual double computeDoubleDerivative(vec X_visible)=0;
+    virtual double computeDoubleDerivative()=0;
     virtual double computeDerivative(vec X_visible)=0;
     virtual double sigmoid(double x)=0;
     virtual double sigmoid_input(int x)=0;

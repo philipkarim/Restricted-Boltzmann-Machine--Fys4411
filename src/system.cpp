@@ -78,7 +78,7 @@ bool System::metropolisStepImportanceSampling() {
     //Metropolis-Hastings test
 
     //Declaring vaiables to be used:
-    double Position_old, wfnew, wfold, term_1, term_2, rand_norm ,green_factor, step, greenRate;
+    double Position_old, wfnew, wfold, term_1, term_2, rand_norm ,green_factor, greenRate;
     int random_index;
     //Defining position and quantum force vectors
     //to be used in the importance sampling
@@ -135,12 +135,10 @@ bool System::GibbsSampling() {
     vec weight_and_HN;
 
     X_new_2.zeros(m_numberOfVN);
-    vec X = m_waveFunction->get_X();
-    vec m_h = m_waveFunction->get_h();
-    vec m_a = m_waveFunction->get_a();
-    vec m_b = m_waveFunction->get_b();
-    mat m_w = m_waveFunction->get_w();
-    weight_and_HN = m_w*m_h;
+    vec hh = m_waveFunction->get_h();
+    vec aa = m_waveFunction->get_a();
+    mat ww = m_waveFunction->get_w();
+    weight_and_HN = ww*hh;
 
     //Random integer generator
     random_device rd;
@@ -152,14 +150,14 @@ bool System::GibbsSampling() {
         sigmoid_probabillity=m_waveFunction->sigmoid(m_waveFunction->sigmoid_input(i));
         //cout<<sigmoid_probabillity;
         if (sigmoid_probabillity >= random_uniform){
-            m_h[i] = 1;}
+            hh[i] = 1;}
         else{
-            m_h[i] = 0;}
+            hh[i] = 0;}
     }
 
     //New positions
     for (int j=0; j<m_numberOfVN; j++){
-        x_avg = m_a[j] + weight_and_HN[j];
+        x_avg = aa[j] + weight_and_HN[j];
         normal_distribution<double> Normaldistribution(x_avg, m_waveFunction->getSigma());
         random_normal=Normaldistribution(gen);
         //Filling up the new X with positions
@@ -187,6 +185,12 @@ void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
         m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
         runMetropolisSteps();
         m_SGD->SGDOptimize(m_sampler->getGradient());
+
+        if(rbm_cycle==RBMCycles-1){
+            if (m_general_wtf==true){
+                m_sampler->writeToFile();}
+        }
+
     }
 
 }
@@ -220,7 +224,6 @@ void System::runMetropolisSteps() {
     //Chooosing what to sample
     m_sampler->computeAverages();
     m_sampler->printOutputToTerminal();
-    if (m_general_wtf==true){m_sampler->writeToFile();}
     
 }
 
