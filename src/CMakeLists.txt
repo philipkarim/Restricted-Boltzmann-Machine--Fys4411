@@ -28,8 +28,7 @@ include_directories(
     Hamiltonians
     InitialStates
     WaveFunctions
-    Math
-  
+
 )
 
 # Add sources from all directories
@@ -38,7 +37,6 @@ file(
     GLOB SOURCES "Hamiltonians/*.cpp"
     GLOB SOURCES "InitialStates/*.cpp"
     GLOB SOURCES "WaveFunctions/*.cpp"
-    GLOB SOURCES "Math/*.cpp"
 )
 
 find_package(Armadillo REQUIRED)

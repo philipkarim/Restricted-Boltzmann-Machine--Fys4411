@@ -17,11 +17,11 @@ using namespace std;
 using namespace arma;
 
 System::System() {
-    m_random = new Random();
 }
 
 System::System(int seed) {
-    m_random = new Random(seed);
+    default_random_engine engine;
+    engine.seed(seed);
 }
 
 bool System::metropolisStep() {
@@ -150,7 +150,7 @@ bool System::GibbsSampling() {
     for (int i=0; i < m_numberOfHN; i++){
         random_uniform =UniformNumberGenerator(gen);
         sigmoid_probabillity=m_waveFunction->sigmoid(m_waveFunction->sigmoid_input(i));
-
+        //cout<<sigmoid_probabillity;
         if (sigmoid_probabillity >= random_uniform){
             m_h[i] = 1;}
         else{
@@ -225,69 +225,17 @@ void System::runMetropolisSteps() {
 }
 
 
-
-void System::setNumberOfParticles(int numberOfParticles) {
-    m_numberOfParticles = numberOfParticles;
-}
-
-void System::setNumberOfDimensions(int numberOfDimensions) {
-    m_numberOfDimensions = numberOfDimensions;
-}
-
 void System::setStepLength(double stepLength) {
     assert(stepLength >= 0);
     m_stepLength = stepLength;
 }
 
-void System::setEquilibrationFraction(double equilibrationFraction) {
-    assert(equilibrationFraction >= 0);
-    m_equilibrationFraction = equilibrationFraction;
-}
-
-void System::setHamiltonian(Hamiltonian* hamiltonian) {
-    m_hamiltonian = hamiltonian;
-}
-
-void System::setWaveFunction(WaveFunction* waveFunction) {
-    m_waveFunction = waveFunction;
-}
-
-void System::setInitialState(InitialState* initialState) {
-    m_initialState = initialState;
-}
-
-void System::setSampleMethod(int sampleMethod) {
-    m_sampleMethod = sampleMethod;
-}
-
 void System::setTimeStep(double timeStep) {
+    assert(timeStep >= 0);
     m_timeStep= timeStep;
 }
 
-void System::setInteraction(bool interaction) {
-    m_interaction= interaction;
-}
-
-void System::setgeneralwtf(bool generalwtf) {
-    m_general_wtf = generalwtf;
-}
-
-void System::setNumberParticles(int numberOfParticles) {
-    m_numberOfParticles = numberOfParticles;
-}
-
-void System::setNumberDimensions(int numberOfDimensions) {
-    m_numberOfDimensions = numberOfDimensions;
-}
-
-void System::setLearningRate(double learningRate) {
-    m_learningRate = learningRate;
-}
-
-void System::setNumberOfHN(int n_hidden){ 
-    m_numberOfHN = n_hidden; 
-}
-
-void System::setNumberOfVN(int n_visible){ 
-    m_numberOfVN = n_visible; 
+void System::setEquilibrationFraction(double equilibrationFraction) {
+    assert(equilibrationFraction >= 0);
+    m_equilibrationFraction = equilibrationFraction;
 }

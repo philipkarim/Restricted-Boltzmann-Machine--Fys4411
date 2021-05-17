@@ -47,10 +47,10 @@ void RandomUniform::setupInitialState() {
 
     //Filling the parameters with zeros
     initial_x.zeros();
-    initial_h.zeros();
     initial_a.zeros();
     initial_b.zeros();
     initial_w.zeros();
+    initial_h.zeros();
 
     //Random generator
     random_device rd;

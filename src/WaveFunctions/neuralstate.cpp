@@ -14,8 +14,8 @@ NeuralState::NeuralState(System* system, int part,
                                 int dim, double sigma) :
         WaveFunction(system) {
     m_sigma = sigma;
-    m_system->setNumberParticles(part);
-    m_system->setNumberDimensions(dim);
+    m_system->setNumberOfParticles(part);
+    m_system->setNumberOfDimensions(dim);
 
 }
 
