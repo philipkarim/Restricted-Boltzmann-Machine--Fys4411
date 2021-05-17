@@ -190,7 +190,122 @@ void Sampler::writeToFile(){
 
 }
 
+void Sampler::writeToFile_steps(){
+  ofstream myfile, myfiletime;
+  string folderpart1, distribution_part, method, interaction_part;
+  string step_size="step_size";
+  double step_value;
+  int sample_method=m_system->getSampleMethod();
+
+  if(m_system->getInteraction()){
+    interaction_part="interaction";
+  }
+  else{
+    interaction_part="no_interaction";
+  }
+
+  if(m_system->getDistribution()){
+    distribution_part="uniform_distribution";
+  }
+  else{
+    distribution_part="normal_distribution";
+  }
+
+  if (sample_method==0){
+    method="bruteforce";
+    step_value=m_system->getStepLength();
+  }
+  else if (sample_method==1){
+    method="importance";
+    step_value=m_system->getTimeStep();
+  }
+  else{
+    method="gibbs";
+  }
+
+  folderpart1 ="Results/"+interaction_part+"/"+step_size+"/"+method+"/"+distribution_part+"/";
+
+  int parti= m_system->getNumberOfParticles();
+  int dimen= m_system->getNumberOfDimensions();
+  int HN= m_system->getNumberOfHN();
+  double lr=m_system->getLearningRate();
+
+  string filename=folderpart1+"N="+to_string(parti)+"D="+to_string(dimen)+"HN="+to_string(HN)+"lr="+to_string((int)round(lr*1000));
+
+  myfile.open(filename, fstream::app);
+
+  cout << "Mean energies are being written to file.."<<endl;
+
+  myfile<< fixed << setprecision(8) <<m_energy<<" "<<step_value<<" "<<m_acceptRatio<<endl;
+  
+  cout << "Done!"<<endl;
+  cout<<endl;
+
+  myfile.close();
+
+
+}
+
+void Sampler::writeToFiles_distribution(){
+  ofstream myfile, myfiletime;
+  string folderpart1, distribution_part, method, interaction_part;
+  vector<double> dist_energy=m_system->Getdistribution_energy();
+
+  int sample_method=m_system->getSampleMethod();
+
+  if(m_system->getInteraction()){
+    interaction_part="interaction";
+  }
+  else{
+    interaction_part="no_interaction";
+  }
+
+  if(m_system->getDistribution()){
+    distribution_part="uniform_distribution";
+  }
+  else{
+    distribution_part="normal_distribution";
+  }
+
+  if (sample_method==0){
+    method="bruteforce";
+  }
+  else if (sample_method==1){
+    method="importance";
+  }
+  else{
+    method="gibbs";
+  }
+
+  folderpart1 ="Results/"+interaction_part+"/distribution_investigation/"+distribution_part+"/";
+
+  int parti= m_system->getNumberOfParticles();
+  int dimen= m_system->getNumberOfDimensions();
+  int HN= m_system->getNumberOfHN();
+  double lr=m_system->getLearningRate();
+  double init=m_system->getInitialization();
+
+  string filename=folderpart1+"HN="+to_string(HN)+"lr="+to_string((int)round(lr*1000))+to_string((int)round(init*1000));
+  myfile.open(filename);
+
+  cout << "Mean energies are being written to file.."<<endl;
+
+  for(int i=0; i<int(dist_energy.size()); i++){
+    myfile<< fixed << setprecision(8) <<dist_energy[i]<<endl;
+  }
+  cout << "Done!"<<endl;
+  cout<<endl;
+
+  myfile.close();
+
+
+}
+
+
+
+
 /*
+
 //Step sizes and time steps written to file
 void Sampler::writeToFileSteps(vector<int> steps_list, vector<double> meanEL_list){
   ofstream myfile4;

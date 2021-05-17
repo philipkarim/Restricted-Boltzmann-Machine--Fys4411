@@ -15,7 +15,9 @@ public:
     double getEnergy()          { return m_energy; }
     double getVariance()          { return m_variance; }
     double getAcceptRatio()          { return m_acceptRatio; }
-    
+    void writeToFile_steps();
+    void writeToFiles_distribution();
+
     vec getGradient()             { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
 
 private:

@@ -12,7 +12,6 @@ public:
 private:    
     double numberOfVN;
     double numberOfHN;
-    double m_initialization;
     double m_sigma;
     bool m_uniform;
 

@@ -19,7 +19,6 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
     numberOfHN = n_hidden;
     numberOfVN = n_visible;
     m_uniform = gaussian;
-    m_initialization = initialization;
 
     /* The Initial State class is in charge of everything to do with the
      * initialization of the system; this includes determining the number of
@@ -27,6 +26,7 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
      * works as intended, this information is passed to the system here.
      */
     m_system->setDistribution(gaussian);
+    m_system->setInitialization(initialization);
     m_system->setNumberOfHN(n_hidden);
     m_system->setNumberOfVN(n_visible);
 
@@ -34,6 +34,7 @@ RandomUniform::RandomUniform(System* system, int n_hidden,
 }
 
 void RandomUniform::setupInitialState() {
+    double initialization2=m_system->getInitialization();
     //Constructing the parametere vectors of their sizes:
     //visible nodes
     vec initial_x(numberOfVN);
@@ -60,9 +61,9 @@ void RandomUniform::setupInitialState() {
     // Set up the distribution for x \in [[x, x],(can use multiple configurations)
     uniform_real_distribution<double> UniformNumberGenerator(-0.5,0.5);
     //Uniform distributions
-    uniform_real_distribution<double> uniform_weights(-m_initialization, m_initialization);
+    uniform_real_distribution<double> uniform_weights(-initialization2, initialization2);
     //Gaussian distriubution
-    normal_distribution<double> normal_weights(0, m_initialization);
+    normal_distribution<double> normal_weights(0, initialization2);
 
     //Initializing positions from a uniform distribution
     for (int i=0; i<numberOfVN; i++){

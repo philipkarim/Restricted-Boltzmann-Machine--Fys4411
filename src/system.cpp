@@ -186,9 +186,20 @@ void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
         runMetropolisSteps();
         m_SGD->SGDOptimize(m_sampler->getGradient());
 
+        if (m_wtfDistribution==true){
+            distribution_energy.push_back(m_sampler->getEnergy()); 
+        }
+
         if(rbm_cycle==RBMCycles-1){
             if (m_general_wtf==true){
-                m_sampler->writeToFile();}
+                m_sampler->writeToFile();
+            }
+            else if(m_wtfSteps==true){
+                m_sampler->writeToFile_steps();
+            }
+            else if (m_wtfDistribution==true){
+                m_sampler->writeToFiles_distribution();
+            }
         }
 
     }

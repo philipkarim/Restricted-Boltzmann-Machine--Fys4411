@@ -43,7 +43,7 @@ void SGD::SGDOptimize(vec parameters_derivative){
     for (int k=0; k<numberOfVN; k++){
         for (int l=0; l<numberOfHN; l++){
             w_weight(k, l) -= lr*parameters_derivative[index_w];
-            index_w++;
+            //index_w++;
             if (index_w==int(parameters_derivative.n_elem)){
                 std::cout<<"BREAK due to SGD loop!";
                 break;

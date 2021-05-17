@@ -39,6 +39,9 @@ public:
     void setNumberOfHN              (int n_hidden){m_numberOfHN=n_hidden;}
     void setNumberOfVN              (int n_visible){m_numberOfVN=n_visible;}
     void setDistribution            (bool uni){m_uniform_distr=uni;}
+    void setwtfSteps                (bool find_optimal_step){m_wtfSteps=find_optimal_step;}
+    void setWtfDistibution          (bool distribution_wtf){m_wtfDistribution=distribution_wtf;}
+    void setInitialization          (double initialization2){m_initialization=initialization2;}
 
     //Get value-functions
     int getNumberOfVN()             { return m_numberOfVN;}
@@ -54,7 +57,8 @@ public:
     double getStepLength()          { return m_stepLength;}
     double getInteraction()         { return m_interaction;}
     bool getDistribution()   { return m_uniform_distr;}
-
+    double getInitialization()          {return m_initialization;}
+    vector<double> Getdistribution_energy(){return distribution_energy;}
 private:
     int                             m_numberOfHN = 0;
     int                             m_numberOfVN = 0;
@@ -63,11 +67,15 @@ private:
     int                             m_numberOfMetropolisSteps = 0;
     int                             m_RBMCycles = 0;
     double                          m_equilibrationFraction = 0.0;
+    double m_initialization;
     int m_sampleMethod;
     double m_stepLength;
     double m_timeStep;
     bool m_interaction;
     bool m_general_wtf;
+    bool m_wtfSteps=false;
+    bool m_wtfDistribution=false;
+    vector<double> distribution_energy;
     double m_learningRate;
     bool m_uniform_distr;
     class WaveFunction*             m_waveFunction = nullptr;
