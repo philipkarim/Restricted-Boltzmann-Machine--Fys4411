@@ -5,6 +5,9 @@ import pandas as pd
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 #from scipy import *
+import seaborn as sns
+
+sns.set_style("darkgrid")
 
 CB91_Blue = '#2CBDFE'
 CB91_Green = '#47DBCD'
@@ -111,61 +114,105 @@ def linspacealpha():
     return
 
 
-def plottsteps():
-    #Both plotted with alpha=0.4
-
+def plottsteps():    
     #Filenames
-    fn_bf=['steplength005N10Dim3.txt', 'steplength01N10Dim3.txt', 'steplength025N10Dim3.txt', 'steplength05N10Dim3.txt', 'steplength1N10Dim3.txt']
-    fn_is=['timestep0005N10Dim3.txt', 'timestep001N10Dim3.txt', 'timestep005N10Dim3.txt', 'timestep01N10Dim3.txt','timestep025N10Dim3.txt', 'timestep05N10Dim3.txt']
-
+    fn_name=['HN=2lr=350001']
+   
     #Folders
-    folder= ["Results/steps/bruteforce/", "Results/steps/importancesampling/"]
+    folder_noint= ["Results/no_interaction/step_size/bruteforce/normal_distribution/", "Results/no_interaction/step_size/importance/normal_distribution/"]
+    folder_int= ["Results/no_interaction/step_size/bruteforce/normal_distribution/", "Results/no_interaction/step_size/importance/normal_distribution/"]
 
-    #infile = open(data_path(folder_noninteract[0], fn[4]),'r')
+    no_int_bf = np.loadtxt(data_path(folder_noint[0], fn_name[0]))
+    no_int_is = np.loadtxt(data_path(folder_noint[1], fn_name[0]))
+    int_bf =    np.loadtxt(data_path(folder_int[0], fn_name[0]))
+    int_is =    np.loadtxt(data_path(folder_int[1], fn_name[0]))
 
-    infile = np.loadtxt(data_path(folder[0], fn_bf[0]))
+    plt.plot(no_int_bf[:,0], no_int_bf[:,1])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.show()
+    
+    plt.plot(no_int_bf[:,0], no_int_bf[:,2])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.show()
+
+    plt.plot(no_int_is[:,0], no_int_is[:,1])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.show()
+    
+    plt.plot(no_int_is[:,0], no_int_is[:,2])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.show()
+
+    plt.plot(int_bf[:,0], int_bf[:,1])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.show()
+    
+    plt.plot(int_bf[:,0], int_bf[:,2])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.show()
+
+    plt.plot(int_is[:,0], int_is[:,1])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.show()
+
+    plt.plot(int_is[:,0], int_is[:,2])
+    plt.xlabel('Step size',fontsize=12)
+    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.show()
+    return
+
+def plot_distributions():
+    #Folders
+    folder= ["Results/no_interaction/distribution_investigation/normal_distribution/", "Results/no_interaction/distribution_investigation/uniform_distribution/"]
+    
+    #Filenames
+    fn_bf=['HN=2lr=3501', 'HN=2lr=35010', 'HN=2lr=350250']
+
+    infile1 = np.loadtxt(data_path(folder[0], fn_bf[0]))
     infile2 = np.loadtxt(data_path(folder[0], fn_bf[1]))
-    infile3 = np.loadtxt(data_path(folder[0], fn_bf[2]))
-    infile4 = np.loadtxt(data_path(folder[0], fn_bf[3]))
-    infile5 = np.loadtxt(data_path(folder[0], fn_bf[4]))
+    #infile3 = np.loadtxt(data_path(folder[0], fn_bf[2]))
 
-    #plt.plot(infile[:,0], infile[:,1], label='Step Length=0.05')
-    plt.plot(infile2[:,0], infile2[:,1], label='Step Length=0.1')
-    plt.plot(infile3[:,0], infile3[:,1], label='Step Length=0.25')
-    plt.plot(infile4[:,0], infile4[:,1], label='Step Length=0.5')
-    plt.plot(infile5[:,0], infile5[:,1], label='Step Length=1')
-    plt.xlabel('Monte Carlo cycles',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle (\hbar \omega)$',fontsize=14)
-    plt.grid()
+    #print((infile1[:,0]).size())
+    x=np.linspace(0,100)
+    print(infile1)
+    plt.plot(infile1[:,0], x, label='(0, 0.001)')
+    plt.plot(infile2[:,0], x, label='(0, 0.01)')
+    plt.plot(label='(0, 0.25)-Out of bounds')
+
+    #plt.plot(infile3[:,0], x, label='(0, 0.25)')
+    plt.xlabel('RBM cycles',fontsize=12)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    #plt.grid()
     plt.legend()
     plt.show()
 
-    infile6 = np.loadtxt(data_path(folder[1], fn_is[0]))
-    infile7 = np.loadtxt(data_path(folder[1], fn_is[1]))
-    infile8 = np.loadtxt(data_path(folder[1], fn_is[2]))
-    infile9 = np.loadtxt(data_path(folder[1], fn_is[3]))
-    infile10 = np.loadtxt(data_path(folder[1], fn_is[4]))
-    infile11 = np.loadtxt(data_path(folder[1], fn_is[5]))
+    infile4 = np.loadtxt(data_path(folder[1], fn_bf[0]))
+    infile5 = np.loadtxt(data_path(folder[1], fn_bf[1]))
+    infile6 = np.loadtxt(data_path(folder[1], fn_bf[2]))
 
-    #plt.plot(infile6[:,0], infile6[:,1], label='Time Step=0.005')
-    plt.plot(infile7[:,0], infile7[:,1], label='Time Step=0.01')
-    plt.plot(infile8[:,0], infile8[:,1], label='Time Step=0.05')
-    plt.plot(infile9[:,0], infile9[:,1], label='Time Step=0.1')
-    plt.plot(infile10[:,0], infile10[:,1], label='Time Step=0.25')
-    #plt.plot(infile11[:,0], infile11[:,1], label='Time Step=0.5')
-
-    plt.xlabel('Monte Carlo cycles',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle(\hbar \omega) $',fontsize=14)
-    plt.grid()
-    plt.legend(loc=(0.67, 0.67))
+    plt.plot(infile4[:,0], x, label='(-0.001, 0.001)')
+    plt.plot(infile5[:,0], x, label='(-0.01, 0.01)')
+    plt.plot(infile6[:,0], x, label='(-0.25, 0.25)')
+   
+    plt.xlabel('RBM cycles',fontsize=12)
+    plt.ylabel(r'$\langle E_L \rangle(a.u.) $',fontsize=14)
+    #plt.grid()
+    plt.legend()
+    #plt.legend(loc=(0.67, 0.67))
     plt.show()
     
     return
 
-
-
-variationalpha()
+plot_distributions()
 #plottsteps()
+#variationalpha()
 #linspacealpha()
 
 

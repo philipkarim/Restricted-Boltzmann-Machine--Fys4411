@@ -26,7 +26,7 @@ int main() {
     int hidden_nodes        = 2;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
-    bool uniform_distr      = true;//Is normal only for gibbs?            //Normal=false, Uniform=true
+    bool uniform_distr      = false;//Is normal only for gibbs?            //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
@@ -37,8 +37,8 @@ int main() {
     double learningRate     = 0.35;
     //Write to file
     bool generalwtf        =false;          // General information- write to file
-    bool explore_distribution=true;
-    bool find_optimal_step =false;
+    bool explore_distribution=false;
+    bool find_optimal_step =true;
 
     System* system = new System(seed);
     system->setHamiltonian              (new HarmonicOscillator(system, omega));
@@ -113,8 +113,8 @@ int main() {
         //bf, non interacting, different step sizes
         for (double i=1.5; i>0.1; i-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
-          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
-          system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes,uniform_distr, initialization)); 
+          system->setWaveFunction             (new NeuralState(system, 1, 1, sigma_val));
+          system->setInitialState             (new RandomUniform(system, 2, 1,uniform_distr, initialization)); 
           system->setStepLength               (i);                                                   
           system->setLearningRate             (learningRate);
           system->setTimeStep                 (timeStep);
@@ -130,8 +130,8 @@ int main() {
       else{pid1=fork(); if(pid1==0){
         for (double k=1.5; k>0.1; k-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
-          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
-          system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes,uniform_distr, initialization));
+          system->setWaveFunction             (new NeuralState(system, 2, 2, sigma_val));
+          system->setInitialState             (new RandomUniform(system, 2, 4,uniform_distr, initialization));
           system->setStepLength               (k);                                                        
           system->setLearningRate             (learningRate);
           system->setTimeStep                 (timeStep);
@@ -147,8 +147,8 @@ int main() {
       else{pid2=fork(); if(pid2==0){
         for (double j=1; j>0.1; j-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
-          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
-          system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes, uniform_distr, initialization));
+          system->setWaveFunction             (new NeuralState(system, 1, 1, sigma_val));
+          system->setInitialState             (new RandomUniform(system, 2, 1, uniform_distr, initialization));
           system->setStepLength               (stepLength);                                                  
           system->setLearningRate             (learningRate);
           system->setTimeStep                 (j);
@@ -163,8 +163,8 @@ int main() {
       else{
         for (double l=1; l>0.1; l-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
-          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
-          system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes, uniform_distr, initialization));
+          system->setWaveFunction             (new NeuralState(system, 2, 2, sigma_val));
+          system->setInitialState             (new RandomUniform(system, 2, 4, uniform_distr, initialization));
           system->setStepLength               (stepLength);                                                     
           system->setLearningRate             (learningRate);
           system->setTimeStep                 (l);
