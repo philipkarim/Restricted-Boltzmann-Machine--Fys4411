@@ -20,13 +20,13 @@ int main() {
     int seed = 2021;
 
     int numberOfSteps       = (int) pow(2,20); //Amount of metropolis steps
-    int cycles_RBM          = 100;
-    int numberOfDimensions  = 1;            // Set amount of dimensions
-    int numberOfParticles   = 1;            // Set amount of particles
+    int cycles_RBM          = 50;
+    int numberOfDimensions  = 2;            // Set amount of dimensions
+    int numberOfParticles   = 2;            // Set amount of particles
     int hidden_nodes        = 2;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
-    bool uniform_distr      = false;//Is normal only for gibbs?            //Normal=false, Uniform=true
+    bool uniform_distr      = true;//Is normal only for gibbs?            //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
@@ -113,19 +113,20 @@ int main() {
         //bf, non interacting, different step sizes
         for (double i=1.5; i>0.1; i-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
-          system->setWaveFunction             (new NeuralState(system, 1, 1, sigma_val));
-          system->setInitialState             (new RandomUniform(system, 2, 1,uniform_distr, initialization)); 
+          system->setWaveFunction             (new NeuralState(system, 2, 2, sigma_val));
+          system->setInitialState             (new RandomUniform(system, 2, 4,uniform_distr, initialization)); 
           system->setStepLength               (i);                                                   
           system->setLearningRate             (learningRate);
           system->setTimeStep                 (timeStep);
           system->setEquilibrationFraction    (equilibration);
           system->setSampleMethod             (0);
-          system->setInteraction              (false);
+          system->setInteraction              (true);
           system->setgeneralwtf               (generalwtf);
           system->setwtfSteps                 (find_optimal_step);
           system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);
         }}
 
+      /*
       //bf, interacting, different step sizes
       else{pid1=fork(); if(pid1==0){
         for (double k=1.5; k>0.1; k-=0.1){
@@ -159,7 +160,7 @@ int main() {
           system->setwtfSteps                 (find_optimal_step);
           system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);
         }}
-
+        */
       else{
         for (double l=1; l>0.1; l-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
@@ -174,7 +175,7 @@ int main() {
           system->setgeneralwtf               (generalwtf);
           system->setwtfSteps                 (find_optimal_step);
           system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);
-        }}}}}
+        }}} //}}
     else{
     //Setting the different values defined higher in the code
     system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);
