@@ -26,7 +26,7 @@ int main() {
     int hidden_nodes        = 2;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
-    bool uniform_distr      = true;//Is normal only for gibbs?            //Normal=false, Uniform=true
+    bool uniform_distr      = false;         //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
@@ -34,7 +34,7 @@ int main() {
     bool interaction        = false;        // True-> interaction, False->Not interaction
     double sigma_val        = 1.;
     double initialization   = 0.001;
-    double learningRate     = 0.35;
+    double learningRate     = 0.001;
     //Write to file
     bool generalwtf        =false;          // General information- write to file
     bool explore_distribution=false;
