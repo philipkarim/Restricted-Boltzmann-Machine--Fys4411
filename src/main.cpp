@@ -20,21 +20,21 @@ int main() {
     int seed = 2021;
 
     int numberOfSteps       = (int) pow(2,18); //Amount of metropolis steps
-    int cycles_RBM          = 100;
+    int cycles_RBM          = 50;
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
     int hidden_nodes        = 4;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
-    int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
+    int sampler_method      = 1;            //0=BF, 1=IS, 2=GS
     bool uniform_distr      = false;         //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
     double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
     bool interaction        = false;        // True-> interaction, False->Not interaction
-    double sigma_val        = 1.;
+    double sigma_val        = 1;
     double initialization   = 0.001;
-    double learningRate     = 0.01;
+    double learningRate     = 0.1;
     //Write to file
     bool generalwtf        =false;          // General information- write to file
     bool explore_distribution=false;
@@ -148,7 +148,7 @@ int main() {
           system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
           system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes,uniform_distr, initialization)); 
           system->setStepLength               (k);                                                        
-          system->setLearningRate             (0.01);
+          system->setLearningRate             (0.25);
           system->setTimeStep                 (timeStep);
           system->setEquilibrationFraction    (equilibration);
           system->setSampleMethod             (0);
@@ -180,9 +180,9 @@ int main() {
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
           system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
           system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes,uniform_distr, initialization)); 
-          system->setStepLength               (f);                                                        
-          system->setLearningRate             (0.01);
-          system->setTimeStep                 (timeStep);
+          system->setStepLength               (stepLength);                                                        
+          system->setLearningRate             (0.25);
+          system->setTimeStep                 (f);
           system->setEquilibrationFraction    (equilibration);
           system->setSampleMethod             (1);
           system->setInteraction              (false);
@@ -195,11 +195,11 @@ int main() {
       else{pid4=fork(); if(pid4==0){
         for (double g=1; g>0.1; g-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
-          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
+          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, g));
           system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes,uniform_distr, initialization)); 
           system->setStepLength               (stepLength);                                                  
           system->setLearningRate             (0.1);
-          system->setTimeStep                 (g);
+          system->setTimeStep                 (timeStep);
           system->setEquilibrationFraction    (equilibration);
           system->setSampleMethod             (2);
           system->setInteraction              (false);
@@ -210,11 +210,11 @@ int main() {
       else{
         for (double gg=1; gg>0.1; gg-=0.1){
           system->setHamiltonian              (new HarmonicOscillator(system, omega));
-          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
+          system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, gg));
           system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes,uniform_distr, initialization)); 
           system->setStepLength               (stepLength);                                                     
-          system->setLearningRate             (0.01);
-          system->setTimeStep                 (gg);
+          system->setLearningRate             (0.25);
+          system->setTimeStep                 (timeStep);
           system->setEquilibrationFraction    (equilibration);
           system->setSampleMethod             (2);
           system->setInteraction              (false);
