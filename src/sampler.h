@@ -17,7 +17,7 @@ public:
     double getAcceptRatio()          { return m_acceptRatio; }
     void writeToFile_steps();
     void writeToFiles_distribution();
-
+    void writeToFile_lr_nodes();
     vec getGradient()             { return 2*(m_E_Lderiv_expect-(m_E_Lderiv*m_energy)); }
 
 private:

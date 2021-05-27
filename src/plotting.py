@@ -132,23 +132,24 @@ def plottsteps():
     int_is =    np.loadtxt(data_path(folder_int[1], fn_int[0]))
 
     plt.plot(no_int_bf[:,1], no_int_bf[:,0])
-    plt.ylim(0.485,0.515)
+    plt.ylim(0.497,0.503)
     plt.xlabel('Step size',fontsize=12)
     plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
     plt.show()
     
-    plt.plot(no_int_bf[:,1], np.flip(no_int_bf[:,2]))
+    plt.plot(no_int_bf[::-1,1], no_int_bf[::-1,2])
     plt.xlabel('Step size',fontsize=12)
     plt.ylabel('Acceptance rate',fontsize=14)
     plt.show()
 
     plt.plot(no_int_is[:,1], no_int_is[:,0])
-    plt.xlabel('Step size',fontsize=12)
+    plt.ylim(0.497,0.503)
+    plt.xlabel('Time step',fontsize=12)
     plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
     plt.show()
     
-    plt.plot(no_int_is[:,1], np.flip(no_int_is[:,2]))
-    plt.xlabel('Step size',fontsize=12)
+    plt.plot(no_int_is[:,1], (no_int_is[:,2]))
+    plt.xlabel('Time step',fontsize=12)
     plt.ylabel('Acceptance rate',fontsize=14)
     plt.show()
 
@@ -157,18 +158,18 @@ def plottsteps():
     plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
     plt.show()
     
-    plt.plot(int_bf[:,1], np.flip(int_bf[:,2]))
+    plt.plot(int_bf[:,1], (int_bf[:,2]))
     plt.xlabel('Step size',fontsize=12)
     plt.ylabel('Acceptance rate',fontsize=14)
     plt.show()
 
     plt.plot(int_is[:,1], int_is[:,0])
-    plt.xlabel('Step size',fontsize=12)
+    plt.xlabel('Time step',fontsize=12)
     plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
     plt.show()
 
-    plt.plot(int_is[:,1], np.flip(int_is[:,2]))
-    plt.xlabel('Step size',fontsize=12)
+    plt.plot(int_is[:,1], (int_is[:,2]))
+    plt.xlabel('Time step',fontsize=12)
     plt.ylabel('Acceptance rate',fontsize=14)
     plt.show()
     return
@@ -208,7 +209,7 @@ def plot_distributions():
     plt.plot(x, infile5, label='(-0.001, 0.001)')
     plt.plot(x, infile6, label='(-0.005, 0.005)')
     plt.plot(x, infile7, label='(-0.01, 0.01)')
-    plt.plot(x, infile8, label='(-0.25, 0.25)')
+    #plt.plot(x, infile8, label='(-0.25, 0.25)')
    
     plt.xlabel('RBM cycles',fontsize=12)
     plt.ylabel(r'$\langle E_L \rangle(a.u.) $',fontsize=14)

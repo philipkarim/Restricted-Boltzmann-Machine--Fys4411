@@ -14,13 +14,28 @@
 
 using namespace std;
 
+//Just a function used when investigating learning rates and the number of hiden nodes
+void learning_rate_and_nodes(int lr_part, int lr_dim, double learning_rate, int h_node, double lr_sigma, double step_val, bool interacting_lrn, int solver){
+          System* system = new System(2021);
+          system->setHamiltonian              (new HarmonicOscillator(system, 1.0));
+          system->setWaveFunction             (new NeuralState(system, lr_part, lr_dim, lr_sigma));
+          system->setInitialState             (new RandomUniform(system, h_node, lr_part*lr_dim,false, 0.001)); 
+          system->setStepLength               (step_val);                                                   
+          system->setLearningRate             (learning_rate);
+          system->setTimeStep                 (step_val);
+          system->setEquilibrationFraction    (0.2);
+          system->setSampleMethod             (solver);
+          system->setInteraction              (interacting_lrn);
+          system->setWtfLrNodes               (true);
+          system->runBoltzmannMachine         (40, (int) pow(2,18));
+}
 int main() {
 
     // Seed for the random number generator
     int seed = 2021;
 
     int numberOfSteps       = (int) pow(2,18); //Amount of metropolis steps
-    int cycles_RBM          = 50;
+    int cycles_RBM          = 40;
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
     int hidden_nodes        = 4;
@@ -29,16 +44,18 @@ int main() {
     bool uniform_distr      = false;         //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
-    double timeStep         = 0.25;         // Metropolis time step (Importance sampling)
+    double timeStep         = 0.4;         // Metropolis time step (Importance sampling)
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
     bool interaction        = false;        // True-> interaction, False->Not interaction
     double sigma_val        = 1;
     double initialization   = 0.001;
-    double learningRate     = 0.1;
+    double learningRate     = 0.001;
+    
     //Write to file
     bool generalwtf        =false;          // General information- write to file
     bool explore_distribution=false;
-    bool find_optimal_step =true;
+    bool find_optimal_step =false;
+    bool nodes_lr          =true;
 
     System* system = new System(seed);
     system->setHamiltonian              (new HarmonicOscillator(system, omega));
@@ -222,6 +239,50 @@ int main() {
           system->setwtfSteps                 (find_optimal_step);
           system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);
         }}} }}}}
+    else if(nodes_lr==true){
+      //Testing for various learning rates and nodes
+      int pid, pid1, pid2, pid3, pid4;
+      //Using more cores to achieve more results faster
+      pid=fork();
+      if(pid==0){
+        //bf, non interacting
+        for (double lr_bf=0.001; lr_bf<0.41; lr_bf+=0.05){
+          for (int node_bf=2; node_bf<20; node_bf+=2){
+            learning_rate_and_nodes( 1, 1, lr_bf, node_bf,  1., 0.5, false, 0);
+        }}}
+
+      //is, non interacting
+      else{pid1=fork(); if(pid1==0){
+        for (double lr_is=0.001; lr_is<0.41; lr_is+=0.05){
+          for (int node_is=2; node_is<20; node_is+=2){
+            learning_rate_and_nodes(1, 1, lr_is, node_is, 1., 0.25, false, 1);
+        }}}
+
+      //gibbs, non interacting
+      else{pid2=fork(); if(pid2==0){
+        for (double lr_gibbs=0.001; lr_gibbs<0.41; lr_gibbs+=0.05){
+          for (int node_gibbs=2; node_gibbs<20; node_gibbs+=2){
+            learning_rate_and_nodes(1, 1, lr_gibbs, node_gibbs, 0.7, 0.5, false, 2);
+        }}}
+      //bf, interacting
+      else{pid3=fork(); if(pid3==0){
+                for (double lr_bf_int=0.001; lr_bf_int<0.41; lr_bf_int+=0.05){
+          for (int node_bf_int=2; node_bf_int<20; node_bf_int+=2){
+            learning_rate_and_nodes(2, 2, lr_bf_int, node_bf_int, 1., 0.5, true, 0);
+        }}}
+
+      //is, interacting
+      else{pid4=fork(); if(pid4==0){
+        for (double lr_is_int=0.001; lr_is_int<0.41; lr_is_int+=0.05){
+          for (int node_is_int=2; node_is_int<20; node_is_int+=2){
+            learning_rate_and_nodes(2, 2, lr_is_int, node_is_int, 1., 0.4, true, 1);
+        }}}
+      else{
+        for (double lr_gibbs_int=0.001; lr_gibbs_int<0.41; lr_gibbs_int+=0.05){
+          for (int node_gibbs_int=2; node_gibbs_int<20; node_gibbs_int+=2){
+            learning_rate_and_nodes(2, 2, lr_gibbs_int, node_gibbs_int, 0.7, 0.5, true, 2);
+        }}} }}}}}
+
     else{
     //Setting the different values defined higher in the code
     system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);
@@ -229,9 +290,6 @@ int main() {
     return 0;
 }
 
-//Tasks:
-//-----------------------
-//Plot steps by using lower 
 
 
 /*

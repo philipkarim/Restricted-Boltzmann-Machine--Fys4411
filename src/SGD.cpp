@@ -13,10 +13,11 @@ SGD::SGD(System* system){
 }
 
 // Computes the new parameters to be used using SGD
-void SGD::SGDOptimize(vec parameters_derivative){
+int SGD::SGDOptimize(int cycle, vec parameters_derivative){
     //Input of shape[a_0, a_1,...,a_n, b_0, b_1,...,w_00,w01,...w_nn]
     //Starts of by declaring the current parameters and variables:
     int index_b, index_w;
+    double tol = 1e-6;
     double lr=m_system->getLearningRate();
     //Visible and hidden nodes
     int numberOfVN = m_system->getNumberOfVN();
@@ -50,6 +51,15 @@ void SGD::SGDOptimize(vec parameters_derivative){
             }
             index_w++;
         }
+    }
+
+    //Adding a tol to stop the loop
+    if (norm(parameters_derivative)<tol){
+        std::cout<<"SGD tol reached, finishing simulation";
+        return m_system->getRBMCycles()-1;
+    }
+    else{
+        return cycle;
     }
 
     // Changing the old parameters into the new ones

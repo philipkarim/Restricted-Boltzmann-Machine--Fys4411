@@ -90,11 +90,15 @@ void Sampler::printOutputToTerminal() {
     int     nd = m_system->getNumberOfDimensions();
     int     ms = m_system->getNumberOfMetropolisSteps();
     double  ef = m_system->getEquilibrationFraction();
-
+    int     h_nodes= m_system->getNumberOfHN();
+    double  lr= m_system->getLearningRate();
+    
     cout << endl;
     cout << "  -- System info -- " << endl;
     cout << " Number of particles  : " << np << endl;
     cout << " Number of dimensions : " << nd << endl;
+    cout << " Number of hidde nodes: " << h_nodes << endl;
+    cout << " Learning rate        : " << lr << endl;
     cout << " Number of Metropolis steps run : 10^" << log10(ms) << endl;
     cout << " Number of equilibration steps  : 10^" << log10(round(ms*ef)) << endl;
     cout << endl;
@@ -300,7 +304,59 @@ void Sampler::writeToFiles_distribution(){
 
 
 }
+void Sampler::writeToFile_lr_nodes(){
+  ofstream myfile_energy, myfile_specs;
+  string folderpart1, method, interaction_part;
+  double step_value;
+  int sample_method=m_system->getSampleMethod();
 
+  if(m_system->getInteraction()){
+    interaction_part="interaction";
+  }
+  else{
+    interaction_part="no_interaction";
+  }
+
+  if (sample_method==0){
+    method="bruteforce";
+    step_value=m_system->getStepLength();
+  }
+  else if (sample_method==1){
+    method="importance";
+    step_value=m_system->getTimeStep();
+  }
+  else{
+    method="gibbs";
+  }
+
+  folderpart1 ="Results/"+interaction_part+"/nodes_and_lr/"+method+"/";
+
+  int parti= m_system->getNumberOfParticles();
+  int dimen= m_system->getNumberOfDimensions();
+  int HN= m_system->getNumberOfHN();
+  double lr=m_system->getLearningRate();
+
+  string filename_energy=folderpart1+"N="+to_string(parti)+"D="+to_string(dimen)+"energies";
+  string filename_specs=folderpart1+"N="+to_string(parti)+"D="+to_string(dimen)+"specs";
+
+  cout << "Mean energies are being written to file.."<<endl;
+
+  myfile_energy.open(filename_energy, fstream::app);
+    for(int i=0; i<int(meanenergy_list.size()); i++){
+      myfile_energy<< fixed << setprecision(8) <<meanenergy_list[i]<<endl;
+    }
+    myfile_energy<<" "<<endl;
+  myfile_energy.close();
+
+  myfile_specs.open(filename_specs, fstream::app);
+    myfile_specs<< fixed << setprecision(8) <<HN<<" "<<lr<<endl;
+  myfile_specs.close();
+  
+  cout << "Done!"<<endl;
+  cout<<endl;
+
+
+}
 
 
 

@@ -41,6 +41,7 @@ public:
     void setDistribution            (bool uni){m_uniform_distr=uni;}
     void setwtfSteps                (bool find_optimal_step){m_wtfSteps=find_optimal_step;}
     void setWtfDistibution          (bool distribution_wtf){m_wtfDistribution=distribution_wtf;}
+    void setWtfLrNodes              (bool lr_and_nodes){m_lr_and_nodes=lr_and_nodes;}
     void setInitialization          (double initialization2){m_initialization=initialization2;}
 
     //Get value-functions
@@ -72,9 +73,10 @@ private:
     double m_stepLength;
     double m_timeStep;
     bool m_interaction;
-    bool m_general_wtf;
+    bool m_general_wtf=false;
     bool m_wtfSteps=false;
     bool m_wtfDistribution=false;
+    bool m_lr_and_nodes=false;
     vector<double> distribution_energy;
     double m_learningRate;
     bool m_uniform_distr;
