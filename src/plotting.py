@@ -6,9 +6,8 @@ from pandas import DataFrame
 import matplotlib.pyplot as plt
 #from scipy import *
 import seaborn as sns
-
 from matplotlib.ticker import ScalarFormatter
-
+from statisticalhandling import block
 
 sns.set_style("darkgrid")
 
@@ -23,98 +22,6 @@ color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber, CB91_Violet]
 
 def data_path(DATA_ID, dat_id):
     return os.path.join(DATA_ID, dat_id)
-
-def variationalpha():
-    """
-    Plotting the results from gradient decent
-    """
-    #Filenames
-    fn_noninteract=['03N10Dim3nice.txt', '07N10Dim3nice.txt', '03N100Dim3nice.txt']
-    fn_interact=['N10Dim3new.txt', 'N50Dim3new.txt', 'N100Dim3new.txt']
-    #Folders
-    folder = ["Results/GDalpha/noninteract/bruteforce/analytic", "Results/GDalpha/interact/bruteforce/numeric"]
-
-    infile = np.loadtxt(data_path(folder[1], fn_interact[0]))
-
-    #plt.plot(infile[:,0], infile[:,1])
-    #plt.plot(infile[:,0], infile[:,1], 'ro', markersize=3)
-    #plt.xlabel(r'$\alpha$',fontsize=14)
-    #plt.ylabel(r'$\langle E_L \rangle(\hbar \omega) $',fontsize=14)
-    #plt.grid()
-    #plt.show()
-
-    # Generate data for the zoomed portion
-    #X_detail=infile[5:14,0]
-    #Y_detail = infile[5:14,1]
-    #X_detail=infile[29:len(infile),0]
-    #Y_detail = infile[29:len(infile),1]
-    X_detail=infile[8:len(infile),0]
-    Y_detail = infile[8:len(infile),1]
-
-    # plot the main figure
-    plt.plot(infile[:,0], infile[:,1])
-    plt.plot(infile[:,0], infile[:,1], 'ro', markersize=3)
-    plt.grid()
-    plt.xlabel(r'$\alpha$',fontsize=14)
-    plt.ylabel(r'$\langle E_L \rangle(\hbar \omega) $',fontsize=14)
-
-    # location for the zoomed portion 
-    sub_axes = plt.axes([.52, 0.57, 0.35, 0.25]) 
-    #sub_axes = plt.axes([0.2, 0.57, 0.35, 0.25]) 
-    #sub_axes = plt.axes([0.22, 0.59, 0.35, 0.25]) 
-
-    # plot the zoomed portion
-    sub_axes.plot(X_detail, Y_detail) 
-    sub_axes.plot(X_detail, Y_detail, 'ro', markersize=3) 
-
-    # insert the zoomed figure
-    #plt.setp(sub_axes)
-    plt.grid()
-
-    plt.show()
-
-
-    return
-
-
-def linspacealpha():
-    """
-    Plotting the local energy as variation of alpha
-    """
-    #Dim=3, particles=10, noninteracting, 2^18 steps
-    a_nonint=  [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7]
-    el_nonint= [16.98, 15.92, 15.38, 15.09, 15, 15.04, 15.26, 15.47, 15.92]
-
-    plt.plot(a_nonint, el_nonint)
-    plt.plot(a_nonint, el_nonint, 'ro', markersize=3)
-    plt.xlabel(r'$\alpha$',fontsize=14)
-    plt.ylabel(r'$\langle E_L \rangle(\hbar \omega) $',fontsize=14)
-    plt.grid()
-    plt.show()
-
-    #Dim=3, particles=10, noninteracting, 2^18 steps
-    a_is_nonint=  [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7]
-    el_is_nonint= [21.7391, 16.57, 15.203, 15.0384 ,15, 15.638, 16.387, 17.3116, 18.5878]
-
-    plt.plot(a_is_nonint, el_is_nonint)
-    plt.plot(a_is_nonint, el_is_nonint, 'ro', markersize=3)
-    plt.xlabel(r'$\alpha$',fontsize=14)
-    plt.ylabel(r'$\langle E_L \rangle(\hbar \omega) $',fontsize=14)
-    plt.grid()
-    plt.show()
-
-    #Dim=3, particles=10, interacting, 2^16 steps
-    a_int=  [0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7]
-    el_int= [28.13, 25.76, 24.83, 24.55, 24.39, 24.54, 24.72, 25.15, 25.79]
-
-    plt.plot(a_int, el_int)
-    plt.plot(a_int, el_int, 'ro', markersize=3)
-    plt.xlabel(r'$\alpha$',fontsize=14)
-    plt.ylabel(r'$\langle E_L \rangle(\hbar \omega) $',fontsize=14)
-    plt.grid()
-    plt.show()
-
-    return
 
 
 def plottsteps():    
@@ -220,10 +127,90 @@ def plot_distributions():
     
     return
 
+def plot_lr_nodes():
+    #Folders
+    folder_noint= ["Results/no_interaction/nodes_and_lr/bruteforce/", "Results/no_interaction/nodes_and_lr/importance/", "Results/no_interaction/nodes_and_lr/gibbs/"]
+    folder_int= ["Results/interaction/nodes_and_lr/bruteforce/", "Results/interaction/nodes_and_lr/importance/", "Results/interaction/nodes_and_lr/gibbs/"]
+
+    #Filenames
+    fn_noint=['N=1D=1energies', 'N=1D=1specs']
+    fn_int=['N=2D=2energies_testing', 'N=2D=2specs_testing']
+
+    
+    #No interaction
+    energy_bf_noint= data_path(folder_noint[0], fn_noint[0])
+    specs_bf_noint =np.transpose(np.loadtxt(data_path(folder_noint[0], fn_noint[1])))
+    energy_is_noint= data_path(folder_noint[1], fn_noint[0])
+    specs_is_noint=np.transpose(np.loadtxt(data_path(folder_noint[1], fn_noint[1])))
+    energy_gibbs_noint= data_path(folder_noint[2], fn_noint[0])
+    specs_gibbs_noint =np.transpose(np.loadtxt(data_path(folder_noint[2], fn_noint[1])))
+    #Interaction
+    #energy_bf_int= data_path(folder_int[0], fn_int[0])
+    #specs_bf_int=np.transpose(np.loadtxt(data_path(folder_int[0], fn_int[1])))
+    energy_is_int= data_path(folder_int[1], fn_int[0])
+    specs_is_int=np.transpose(np.loadtxt(data_path(folder_int[1], fn_int[1])))
+    #energy_gibbs_int= data_path(folder_int[2], fn_int[0])
+    #specs_gibbs_int=np.transpose(np.loadtxt(data_path(folder_int[2], fn_int[1])))
+    
+    spec_file=specs_is_int
+    file=energy_is_int
+    length_energies=2**19
+    
+    axis_lr=[]
+    axis_nodes=[]
+    axis_heat_lr=[]
+    axis_heat_nodes=[]
+    energy_mean=[]
+    energy_std=[]
+
+    n_runs=len(spec_file[0])
+
+    for i in range(0, n_runs):
+        axis_nodes.append(str(spec_file[0][i]))
+        axis_lr.append(str(spec_file[1][i]))
+        if str(spec_file[0][i])[:-2] not in axis_heat_nodes:
+            node_int=str(spec_file[0][i])
+            axis_heat_nodes.append(node_int[:-2])
+        if str(spec_file[1][i]) not in axis_heat_lr:
+            axis_heat_lr.append(str(spec_file[1][i]))
+        specs_is_int_test= np.loadtxt(file, skiprows=i*length_energies\
+                                      +i, max_rows=length_energies)
+        mean_e, std_v=block(np.transpose(specs_is_int_test))
+        energy_mean.append(mean_e)
+        energy_std.append(std_v)
+    
+    #Creating matrix, used for heatmap
+    lr_frequency= axis_lr.count(axis_lr[0])
+    nodes_frequency= axis_nodes.count(axis_nodes[0])
+
+    heatmap_mean=np.zeros((lr_frequency, nodes_frequency))
+    heatmap_std=np.full_like(heatmap_mean,0)
+
+    index=0
+    for lr in range(0, nodes_frequency):
+        for hn in range(0, lr_frequency):
+            heatmap_mean[hn][lr]=energy_mean[index]
+            heatmap_std[hn][lr]=energy_std[index]
+            index+=1
+    
+    df_mean = DataFrame(heatmap_mean, index=axis_heat_nodes, columns=axis_heat_lr)
+    df_std = DataFrame(heatmap_std, index=axis_heat_nodes, columns=axis_heat_lr)
+
+    sns.heatmap(df_mean, annot=True, cbar_kws={'label': r'$\langle E_L \rangle (a.u.)$'})
+    plt.xlabel('Learning rate',fontsize=12)
+    plt.ylabel('Hidden nodes',fontsize=12)
+    plt.show()
+
+    sns.heatmap(df_std, annot=True, cbar_kws={'label': 'Error by blocking method (a.u.)'})
+    plt.xlabel('Learning rate',fontsize=12)
+    plt.ylabel('Hidden nodes',fontsize=12)
+    plt.show()
+    
+    return
+
 #plot_distributions()
-plottsteps()
-#variationalpha()
-#linspacealpha()
+#plottsteps()
+plot_lr_nodes()
 
 
 
