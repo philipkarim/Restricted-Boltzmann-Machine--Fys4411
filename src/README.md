@@ -1,4 +1,4 @@
-# Simple Variational Monte Carlo solve for FYS4411
+# Restricted Boltzmann Machine for FYS4411
 ## Code structure
 ### Main program
 All parameters are defined in `main`. The most fundamental parts of the code are `system.cpp` which are executing the Boltzmann machine cycles and `sampler.cpp` which is sampling the results. The codes in the `initialStates` folder are initializing the visible and hidden nodes and biases in addition to the weight matrix. The codes in the `wavefunction` folder are implementing the wavefunction which is given by the quantum neural state. The codes in the `Hamiltonian` folder is used to compute the hamiltonian energy.
