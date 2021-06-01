@@ -37,7 +37,7 @@ and the same set of commands are done for you. Now the project can be run by exe
 in the top-directory.
 
 #### Cleaning the directory
-Run `make clean` in the top-directory to remove the executable `vmc` and the `build`-directory.
+Run `make clean` in the top-directory to remove the executable `rbm` and the `build`-directory.
 
 #### Armadillo
 To run the project, armadillo version 10.5.0 needs to be installed.
