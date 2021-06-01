@@ -3,7 +3,6 @@
 #include <cassert>
 #include "wavefunction.h"
 #include "../system.h"
-#include "../particle.h"
 
 #include <iostream>
 #include <armadillo>

@@ -1,6 +1,5 @@
 #include <iostream>
 #include "system.h"
-#include "particle.h"
 #include "WaveFunctions/wavefunction.h"
 #include "WaveFunctions/neuralstate.h"
 #include "Hamiltonians/hamiltonian.h"
@@ -45,7 +44,7 @@ int main() {
     double timeStep         = 0.4;          // Metropolis time step (Importance sampling)
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
     bool interaction        = false;        // True-> interaction, False->Not interaction
-    double sigma_val        = 1;            //Value of sigma
+    double sigma_val        = 1;            //Value of sigma, switch to 0.7 when using gibbs sampling for optimal results
     double initialization   = 0.001;        //Initialisation values of the distributions 
     double learningRate     = 0.001;        //Learning rate
     

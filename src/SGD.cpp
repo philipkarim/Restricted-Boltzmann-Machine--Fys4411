@@ -52,6 +52,11 @@ int SGD::SGDOptimize(int cycle, vec parameters_derivative){
             index_w++;
         }
     }
+    
+    // Changing the old parameters into the new ones
+    m_system->getWaveFunction()->set_a(a_visible);
+    m_system->getWaveFunction()->set_b(b_hidden);
+    m_system->getWaveFunction()->set_w(w_weight);
 
     //Adding a tol to stop the loop
     if (norm(parameters_derivative)<tol){
@@ -62,8 +67,4 @@ int SGD::SGDOptimize(int cycle, vec parameters_derivative){
         return cycle;
     }
 
-    // Changing the old parameters into the new ones
-    m_system->getWaveFunction()->set_a(a_visible);
-    m_system->getWaveFunction()->set_b(b_hidden);
-    m_system->getWaveFunction()->set_w(w_weight);
 }

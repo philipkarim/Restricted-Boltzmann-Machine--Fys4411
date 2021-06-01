@@ -2,7 +2,6 @@
 #include "initialstate.h"
 #include <iostream>
 #include <cassert>
-#include "../particle.h"
 #include "../system.h"
 #include "../WaveFunctions/wavefunction.h"
 

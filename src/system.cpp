@@ -1,7 +1,6 @@
 #include "system.h"
 #include <cassert>
 #include "sampler.h"
-#include "particle.h"
 #include "WaveFunctions/wavefunction.h"
 #include "Hamiltonians/hamiltonian.h"
 #include "InitialStates/initialstate.h"
