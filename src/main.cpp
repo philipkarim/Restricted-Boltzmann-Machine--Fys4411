@@ -34,8 +34,8 @@ int main() {
     // Seed for the random number generator
     int seed = 2021;
 
-    int numberOfSteps       = (int) pow(2,18); //Amount of metropolis steps
-    int cycles_RBM          = 40;
+    int numberOfSteps       = (int) pow(2,20); //Amount of metropolis steps
+    int cycles_RBM          = 100;
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
     int hidden_nodes        = 4;
@@ -52,10 +52,10 @@ int main() {
     double learningRate     = 0.001;
     
     //Write to file
-    bool generalwtf        =false;          // General information- write to file
+    bool generalwtf        =true;          // General information- write to file
     bool explore_distribution=false;
     bool find_optimal_step =false;
-    bool nodes_lr          =true;
+    bool nodes_lr          =false;
 
     System* system = new System(seed);
     system->setHamiltonian              (new HarmonicOscillator(system, omega));
@@ -282,7 +282,62 @@ int main() {
           for (int node_gibbs_int=2; node_gibbs_int<20; node_gibbs_int+=2){
             learning_rate_and_nodes(2, 2, lr_gibbs_int, node_gibbs_int, 0.7, 0.5, true, 2);
         }}} }}}}}
-
+    
+    //This one is a bit overkill, since it runs on 12 cores,
+    //but be sure that you got enough cores on the computer before running
+    else if(generalwtf==true){
+      //Testing for various learning rates and nodes
+      int pid, pid1, pid2, pid3, pid4, pid5, pid6, pid7, pid8, pid9, pid10;
+      //Using more cores to achieve more results faster
+      pid=fork();
+      if(pid==0){
+        //bf, non interacting, 1D
+        learning_rate_and_nodes(1, 1, 0.101, 14,  1., 0.5, false, 0);
+        }
+      //is, non interacting, 1D
+      else{pid1=fork(); if(pid1==0){
+        learning_rate_and_nodes(1, 1, 0.001, 14, 1., 0.25, false, 1);
+        }
+      //gibbs, non interacting, 1D
+      else{pid2=fork(); if(pid2==0){
+        learning_rate_and_nodes(1, 1, 0.251, 10, 0.7, 0.5, false, 2);
+        }
+      //bf, non interacting, 2D      
+      else{pid3=fork(); if(pid3==0){
+        learning_rate_and_nodes(1, 2, 0.101, 14,  1., 0.5, false, 0);
+        }
+      //is, non interacting, 2D
+      else{pid4=fork(); if(pid4==0){
+        learning_rate_and_nodes(1, 2, 0.001, 14, 1., 0.25, false, 1);
+      }
+      //gibbs, non interacting, 2D
+      else{pid5=fork(); if(pid5==0){
+        learning_rate_and_nodes(1, 2, 0.251, 10, 0.7, 0.5, false, 2);
+      }
+      //bf, non interacting, 3D      
+      else{pid6=fork(); if(pid6==0){
+        learning_rate_and_nodes(1, 3, 0.101, 14,  1., 0.5, false, 0);
+      }
+      //is, non interacting, 3D
+      else{pid7=fork(); if(pid7==0){
+        learning_rate_and_nodes(1, 3, 0.001, 14, 1., 0.25, false, 1);
+      }
+      //gibbs, non interacting, 3D
+      else{pid8=fork(); if(pid8==0){
+        learning_rate_and_nodes(1, 3, 0.251, 10, 0.7, 0.5, false, 2);
+      }
+      //bf, non interacting, 3D
+      else{pid9=fork(); if(pid9==0){
+        learning_rate_and_nodes(2, 2, 0.351, 8, 1., 0.5, true, 0);
+      }
+      //is, interacting, 3D
+      else{pid10=fork(); if(pid10==0){
+        learning_rate_and_nodes(2, 2, 0.251, 8, 1., 0.4, true, 1);
+      }
+      //gibbs, interacting, 3D
+      else{
+        learning_rate_and_nodes(2, 2, 0.101, 16, 0.7, 0.5, true, 2);
+        }}}}}}}}}}}}
     else{
     //Setting the different values defined higher in the code
     system->runBoltzmannMachine         (cycles_RBM, numberOfSteps);

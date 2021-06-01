@@ -173,8 +173,8 @@ void Sampler::writeToFile(){
   int HN= m_system->getNumberOfHN();
   double lr=m_system->getLearningRate();
 
-  string filename=folderpart1+"N="+to_string(parti)+"D="+to_string(dimen)+"HN="+to_string(HN)+"lr="+to_string((int)round(lr*1000));
-  string filenametime=folderpart1+"time/"+"N="+to_string(parti)+"D="+to_string(dimen)+"HN="+to_string(HN)+"lr="+to_string(round(lr*1000));
+  string filename=folderpart1+"N="+to_string(parti)+"D="+to_string(dimen);
+  string filenametime=folderpart1+"time/"+"N="+to_string(parti)+"D="+to_string(dimen);
 
   myfile.open(filename);
   myfiletime.open(filenametime);

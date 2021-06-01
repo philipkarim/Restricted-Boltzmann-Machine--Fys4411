@@ -23,6 +23,22 @@ color_list = [CB91_Blue, CB91_Pink, CB91_Green, CB91_Amber, CB91_Violet]
 def data_path(DATA_ID, dat_id):
     return os.path.join(DATA_ID, dat_id)
 
+def plottsigma():    
+    #Filenames
+    fn_noint=['N=1D=1HN=4lr=100']
+
+    #Folders
+    folder= ["Results/no_interaction/step_size/gibbs/normal_distribution/"]
+
+    file = np.loadtxt(data_path(folder[0], fn_noint[0]))
+
+ 
+    plt.plot(file[:,1], file[:,0])
+    plt.xlabel(r'$\sigma$',fontsize=12)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=12)
+    plt.show()
+
+    return
 
 def plottsteps():    
     #Filenames
@@ -41,43 +57,43 @@ def plottsteps():
     plt.plot(no_int_bf[:,1], no_int_bf[:,0])
     plt.ylim(0.497,0.503)
     plt.xlabel('Step size',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=12)
     plt.show()
     
     plt.plot(no_int_bf[::-1,1], no_int_bf[::-1,2])
     plt.xlabel('Step size',fontsize=12)
-    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.ylabel('Acceptance rate',fontsize=12)
     plt.show()
 
     plt.plot(no_int_is[:,1], no_int_is[:,0])
     plt.ylim(0.497,0.503)
     plt.xlabel('Time step',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=12)
     plt.show()
     
     plt.plot(no_int_is[:,1], (no_int_is[:,2]))
     plt.xlabel('Time step',fontsize=12)
-    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.ylabel('Acceptance rate',fontsize=12)
     plt.show()
 
     plt.plot(int_bf[:,1], int_bf[:,0])
     plt.xlabel('Step size',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=12)
     plt.show()
     
     plt.plot(int_bf[:,1], (int_bf[:,2]))
     plt.xlabel('Step size',fontsize=12)
-    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.ylabel('Acceptance rate',fontsize=12)
     plt.show()
 
     plt.plot(int_is[:,1], int_is[:,0])
     plt.xlabel('Time step',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=12)
     plt.show()
 
     plt.plot(int_is[:,1], (int_is[:,2]))
     plt.xlabel('Time step',fontsize=12)
-    plt.ylabel('Acceptance rate',fontsize=14)
+    plt.ylabel('Acceptance rate',fontsize=12)
     plt.show()
     return
 
@@ -99,11 +115,11 @@ def plot_distributions():
     plt.plot(x, infile1, label='(0, 0.001)')
     plt.plot(x, infile2, label='(0, 0.005)')
     plt.plot(x, infile3, label='(0, 0.01)')
-    plt.plot(x, infile4, label='(0, 0.25)')
+    #plt.plot(x, infile4, label='(0, 0.25)')
 
     #plt.plot(infile3[:,0], x, label='(0, 0.25)')
     plt.xlabel('RBM cycles',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=14)
+    plt.ylabel(r'$\langle E_L \rangle (a.u.)$',fontsize=12)
     #plt.grid()
     plt.legend()
     plt.show()
@@ -116,10 +132,10 @@ def plot_distributions():
     plt.plot(x, infile5, label='(-0.001, 0.001)')
     plt.plot(x, infile6, label='(-0.005, 0.005)')
     plt.plot(x, infile7, label='(-0.01, 0.01)')
-    #plt.plot(x, infile8, label='(-0.25, 0.25)')
+    plt.plot(x, infile8, label='(-0.25, 0.25)')
    
     plt.xlabel('RBM cycles',fontsize=12)
-    plt.ylabel(r'$\langle E_L \rangle(a.u.) $',fontsize=14)
+    plt.ylabel(r'$\langle E_L \rangle(a.u.) $',fontsize=12)
     #plt.grid()
     plt.legend()
     #plt.legend(loc=(0.67, 0.67))
@@ -134,7 +150,7 @@ def plot_lr_nodes():
 
     #Filenames
     fn_noint=['N=1D=1energies', 'N=1D=1specs']
-    fn_int=['N=2D=2energies_testing', 'N=2D=2specs_testing']
+    fn_int=['N=2D=2energies', 'N=2D=2specs']
 
     
     #No interaction
@@ -145,16 +161,17 @@ def plot_lr_nodes():
     energy_gibbs_noint= data_path(folder_noint[2], fn_noint[0])
     specs_gibbs_noint =np.transpose(np.loadtxt(data_path(folder_noint[2], fn_noint[1])))
     #Interaction
-    #energy_bf_int= data_path(folder_int[0], fn_int[0])
-    #specs_bf_int=np.transpose(np.loadtxt(data_path(folder_int[0], fn_int[1])))
+    energy_bf_int= data_path(folder_int[0], fn_int[0])
+    specs_bf_int=np.transpose(np.loadtxt(data_path(folder_int[0], fn_int[1])))
     energy_is_int= data_path(folder_int[1], fn_int[0])
     specs_is_int=np.transpose(np.loadtxt(data_path(folder_int[1], fn_int[1])))
-    #energy_gibbs_int= data_path(folder_int[2], fn_int[0])
-    #specs_gibbs_int=np.transpose(np.loadtxt(data_path(folder_int[2], fn_int[1])))
+    energy_gibbs_int= data_path(folder_int[2], fn_int[0])
+    specs_gibbs_int=np.transpose(np.loadtxt(data_path(folder_int[2], fn_int[1])))
     
-    spec_file=specs_is_int
-    file=energy_is_int
-    length_energies=2**19
+    #Switch these files
+    spec_file=specs_gibbs_int
+    file=energy_gibbs_int
+    length_energies=2**17
     
     axis_lr=[]
     axis_nodes=[]
@@ -165,6 +182,7 @@ def plot_lr_nodes():
 
     n_runs=len(spec_file[0])
 
+    #Using the blocking method on one part at the time of the files 
     for i in range(0, n_runs):
         axis_nodes.append(str(spec_file[0][i]))
         axis_lr.append(str(spec_file[1][i]))
@@ -196,21 +214,22 @@ def plot_lr_nodes():
     df_mean = DataFrame(heatmap_mean, index=axis_heat_nodes, columns=axis_heat_lr)
     df_std = DataFrame(heatmap_std, index=axis_heat_nodes, columns=axis_heat_lr)
 
-    sns.heatmap(df_mean, annot=True, cbar_kws={'label': r'$\langle E_L \rangle (a.u.)$'})
+    sns.heatmap(df_mean, annot=True, fmt='.2f', cbar_kws={'label': r'$\langle E_L \rangle (a.u.)$'})
     plt.xlabel('Learning rate',fontsize=12)
     plt.ylabel('Hidden nodes',fontsize=12)
     plt.show()
 
-    sns.heatmap(df_std, annot=True, cbar_kws={'label': 'Error by blocking method (a.u.)'})
+    sns.heatmap(df_std, annot=True, fmt='.2g', cbar_kws={'label': 'Error by blocking method (a.u.)'})
     plt.xlabel('Learning rate',fontsize=12)
     plt.ylabel('Hidden nodes',fontsize=12)
     plt.show()
     
     return
 
+#plottsigma()
 #plot_distributions()
 #plottsteps()
-plot_lr_nodes()
+#plot_lr_nodes()
 
 
 
