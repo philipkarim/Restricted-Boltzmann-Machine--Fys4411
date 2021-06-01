@@ -226,10 +226,52 @@ def plot_lr_nodes():
     
     return
 
+def computefinalresults():
+    #Folders
+    folder_noint= ["Results/no_interaction/bruteforce/normal_distribution/", "Results/no_interaction/importance/normal_distribution/", "Results/no_interaction/gibbs/normal_distribution/"]
+    folder_int= ["Results/interaction/bruteforce/normal_distribution/", "Results/interaction/importance/normal_distribution/", "Results/interaction/gibbs/normal_distribution/"]
+
+    #Filenames
+    fn=['N=1D=1', 'N=1D=2', 'N=1D=3', 'N=2D=2']
+
+    #No interaction
+    bf_noint_1d= data_path(folder_noint[0], fn_noint[0])
+    is_noint_1d= data_path(folder_noint[1], fn_noint[0])
+    gibbs_noint_1d= data_path(folder_noint[2], fn_noint[0])
+    bf_noint_2d= data_path(folder_noint[0], fn_noint[1])
+    is_noint_2d= data_path(folder_noint[1], fn_noint[1])
+    gibbs_noint_2d= data_path(folder_noint[2], fn_noint[1])
+    bf_noint_3d= data_path(folder_noint[0], fn_noint[2])
+    is_noint_3d= data_path(folder_noint[1], fn_noint[2])
+    gibbs_noint_3d= data_path(folder_noint[2], fn_noint[2])
+    #Interaction
+    bf_int= data_path(folder_int[0], fn[3])
+    is_int= data_path(folder_int[1], fn[3])
+    gibbs_int= data_path(folder_int[2], fn[3])
+    
+    #length_energies=2**19
+    
+    mean_e, std_v=block(np.loadtxt(bf_noint_1d))
+    mean_e, std_v=block(np.loadtxt(is_noint_1d))
+    mean_e, std_v=block(np.loadtxt(gibbs_noint_1d))
+    mean_e, std_v=block(np.loadtxt(bf_noint_2d))
+    mean_e, std_v=block(np.loadtxt(is_noint_2d))
+    mean_e, std_v=block(np.loadtxt(gibbs_noint_2d))
+    mean_e, std_v=block(np.loadtxt(bf_noint_3d))
+    mean_e, std_v=block(np.loadtxt(is_noint_3d))
+    mean_e, std_v=block(np.loadtxt(gibbs_noint_3d))
+    mean_e, std_v=block(np.loadtxt(bf_int))
+    mean_e, std_v=block(np.loadtxt(is_int))
+    mean_e, std_v=block(np.loadtxt(gibbs_int))
+
+    
+    return
+
 #plottsigma()
 #plot_distributions()
 #plottsteps()
 #plot_lr_nodes()
+computefinalresults()
 
 
 
