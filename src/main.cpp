@@ -26,8 +26,9 @@ void learning_rate_and_nodes(int lr_part, int lr_dim, double learning_rate, int 
           system->setEquilibrationFraction    (0.2);
           system->setSampleMethod             (solver);
           system->setInteraction              (interacting_lrn);
-          system->setWtfLrNodes               (true);
-          system->runBoltzmannMachine         (40, (int) pow(2,18));
+          system->setWtfLrNodes               (false);
+          system->setgeneralwtf               (true);
+          system->runBoltzmannMachine         (100, (int) pow(2,20));
 }
 int main() {
 
@@ -38,9 +39,9 @@ int main() {
     int cycles_RBM          = 100;
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
-    int hidden_nodes        = 4;
+    int hidden_nodes        = 2;
     int visible_nodes       = numberOfDimensions*numberOfParticles;
-    int sampler_method      = 1;            //0=BF, 1=IS, 2=GS
+    int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
     bool uniform_distr      = false;         //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.

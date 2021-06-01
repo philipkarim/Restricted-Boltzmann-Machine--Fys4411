@@ -235,34 +235,45 @@ def computefinalresults():
     fn=['N=1D=1', 'N=1D=2', 'N=1D=3', 'N=2D=2']
 
     #No interaction
-    bf_noint_1d= data_path(folder_noint[0], fn_noint[0])
-    is_noint_1d= data_path(folder_noint[1], fn_noint[0])
-    gibbs_noint_1d= data_path(folder_noint[2], fn_noint[0])
-    bf_noint_2d= data_path(folder_noint[0], fn_noint[1])
-    is_noint_2d= data_path(folder_noint[1], fn_noint[1])
-    gibbs_noint_2d= data_path(folder_noint[2], fn_noint[1])
-    bf_noint_3d= data_path(folder_noint[0], fn_noint[2])
-    is_noint_3d= data_path(folder_noint[1], fn_noint[2])
-    gibbs_noint_3d= data_path(folder_noint[2], fn_noint[2])
+    bf_noint_1d= data_path(folder_noint[0], fn[0])
+    is_noint_1d= data_path(folder_noint[1], fn[0])
+    gibbs_noint_1d= data_path(folder_noint[2], fn[0])
+    bf_noint_2d= data_path(folder_noint[0], fn[1])
+    is_noint_2d= data_path(folder_noint[1], fn[1])
+    gibbs_noint_2d= data_path(folder_noint[2], fn[1])
+    bf_noint_3d= data_path(folder_noint[0], fn[2])
+    is_noint_3d= data_path(folder_noint[1], fn[2])
+    gibbs_noint_3d= data_path(folder_noint[2], fn[2])
     #Interaction
     bf_int= data_path(folder_int[0], fn[3])
     is_int= data_path(folder_int[1], fn[3])
     gibbs_int= data_path(folder_int[2], fn[3])
     
-    #length_energies=2**19
-    
+    #Can be plotted much more elegantly, fix this if it is time    
     mean_e, std_v=block(np.loadtxt(bf_noint_1d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(is_noint_1d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(gibbs_noint_1d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(bf_noint_2d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(is_noint_2d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(gibbs_noint_2d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(bf_noint_3d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(is_noint_3d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(gibbs_noint_3d))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(bf_int))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(is_int))
+    print(mean_e, std_v)
     mean_e, std_v=block(np.loadtxt(gibbs_int))
+    print(mean_e, std_v)
 
     
     return
