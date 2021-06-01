@@ -7,7 +7,6 @@ using namespace std;
 class System {
 public:
     System();
-    System(int seed);
 
     //Central functions
     void runBoltzmannMachine        (int RBMCycles, int numberOfMetropolisSteps);
@@ -57,9 +56,10 @@ public:
     double getTimeStep()            { return m_timeStep;}
     double getStepLength()          { return m_stepLength;}
     double getInteraction()         { return m_interaction;}
-    bool getDistribution()   { return m_uniform_distr;}
-    double getInitialization()          {return m_initialization;}
+    bool getDistribution()          { return m_uniform_distr;}
+    double getInitialization()      {return m_initialization;}
     vector<double> Getdistribution_energy(){return distribution_energy;}
+
 private:
     int                             m_numberOfHN = 0;
     int                             m_numberOfVN = 0;

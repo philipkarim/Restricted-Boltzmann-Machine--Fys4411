@@ -16,12 +16,12 @@
 using namespace std;
 using namespace arma;
 
-System::System() {
-}
+//Defining the random number generator
+//Using random_device to seed the generator
+random_device rd;
+mt19937 gen(rd());
 
-System::System(int seed) {
-    default_random_engine engine;
-    engine.seed(seed);
+System::System() {
 }
 
 bool System::metropolisStep() {
@@ -29,9 +29,7 @@ bool System::metropolisStep() {
     // Choosing a particle at random and changing it's position by a random
     // amount, and checks if the step is accepted by the Metropolis test
 
-    //Random integer generator
-    random_device rd;
-    mt19937_64 gen(rd());
+    //Distributions
     uniform_int_distribution<int> distribution(0,m_numberOfVN-1);
     uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
 
@@ -88,8 +86,6 @@ bool System::metropolisStepImportanceSampling() {
     double QFNew;
 
     //Random integer generator
-    random_device rd;
-    mt19937_64 gen(rd());
     uniform_int_distribution<int> distribution(0,m_numberOfVN-1);//-1?
     uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
     normal_distribution<double> Normaldistribution(0.0,1.0);
@@ -121,7 +117,6 @@ bool System::metropolisStepImportanceSampling() {
         return true;
     }
     else {
-        //Print the random index here and over, to see if it is the same index
         X_old[random_index]=Position_old;
         return false;
     }
@@ -140,9 +135,7 @@ bool System::GibbsSampling() {
     mat ww = m_waveFunction->get_w();
     weight_and_HN = ww*hh;
 
-    //Random integer generator
-    random_device rd;
-    mt19937_64 gen(rd());
+    //Defining the distribution
     uniform_real_distribution<double> UniformNumberGenerator(0.0,1.0);
     
     for (int i=0; i < m_numberOfHN; i++){
@@ -164,6 +157,7 @@ bool System::GibbsSampling() {
         X_new_2[j] = random_normal;
     }
 
+    //Set the new values
     m_waveFunction->set_X(X_new_2);
 
     return true;
@@ -173,23 +167,23 @@ bool System::GibbsSampling() {
 void System::runBoltzmannMachine(int RBMCycles, int numberOfMetropolisSteps){
     m_RBMCycles                 = RBMCycles;
     m_SGD= (new SGD(this));
-    
-    //m_sampler                   = new Sampler(this);
     m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
-    //m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
-
+   
+    //Looping over the boltzmann machine cycles
     for (int rbm_cycle=0; rbm_cycle<RBMCycles; rbm_cycle++){
         cout<<"RBM cycle: "<<rbm_cycle<<"\n------------------------------";
         m_sampler                   = new Sampler(this);
-        //m_numberOfMetropolisSteps   = numberOfMetropolisSteps;
         m_sampler->setNumberOfMetropolisSteps(numberOfMetropolisSteps);
+        //Run the Monte Carlo algorithm
         runMetropolisSteps();
+        //Update the parameters using SGD
         rbm_cycle=m_SGD->SGDOptimize(rbm_cycle,m_sampler->getGradient());
 
+        //Benchmarking distribution values
         if (m_wtfDistribution==true){
             distribution_energy.push_back(m_sampler->getEnergy()); 
         }
-
+        //Sampling the values after the parameters are optimized
         if(rbm_cycle==RBMCycles-1){
             if (m_general_wtf==true){
                 m_sampler->writeToFile();
@@ -223,6 +217,7 @@ void System::runMetropolisSteps() {
         acceptedStep = GibbsSampling();
       }
       else{
+        //Just ensuring that one of the samling methods is chosen
           cout<<"---No sampling method chosen---";
           exit (EXIT_FAILURE);
       }
@@ -232,15 +227,12 @@ void System::runMetropolisSteps() {
       if (i>=m_numberOfMetropolisSteps*m_equilibrationFraction){
         m_sampler->sample(acceptedStep);
       }
-    //cout<<"The current step is "<<i<<endl;
     }
 
     //Chooosing what to sample
     m_sampler->computeAverages();
-    m_sampler->printOutputToTerminal();
-    
+    m_sampler->printOutputToTerminal();  
 }
-
 
 void System::setStepLength(double stepLength) {
     assert(stepLength >= 0);

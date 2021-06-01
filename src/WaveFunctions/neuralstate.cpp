@@ -20,7 +20,8 @@ NeuralState::NeuralState(System* system, int part,
 }
 
 double NeuralState::evaluate(vec X_visible) {
-    //Evaluates the wavefunction at the given positin
+    //Evaluates the wavefunction at the given positing
+    //Just written the wave function expression straight out
     double exponent_one=0;
     double product_term=1;
     double sum_in_product=0;
@@ -41,8 +42,8 @@ double NeuralState::evaluate(vec X_visible) {
     return psi_value;
 }
 
-//Computes the value of the double derivative. (This is only one part of the energy)
 double NeuralState::computeDoubleDerivative() {
+//Computes the value of the double derivative. (This is only one part of the energy)
     double sum_M=0;
     double sum_N=0;
     double sig_inp;
@@ -58,8 +59,8 @@ double NeuralState::computeDoubleDerivative() {
     return sum_M;
 }
 
-//Computes the value of the analytically first derivative used to compute the local energy
 double NeuralState::computeDerivative(vec X_visible) {
+//Computes the value of the analytically first derivative used to compute the local energy
     double first_sum=0;
     double sec_sum=0;
     
@@ -91,7 +92,7 @@ double NeuralState::sigmoid_input(int x){
 }
 
 //Computes the quantum force for the given X node at the given index.
-//This is usen inimportance sampling
+//This is usen in importance sampling
 double NeuralState::computeQuantumForce(double X_visible_index, int index){
     double first_sum=0;
     double sec_sum=0;

@@ -170,8 +170,6 @@ void Sampler::writeToFile(){
 
   int parti= m_system->getNumberOfParticles();
   int dimen= m_system->getNumberOfDimensions();
-  int HN= m_system->getNumberOfHN();
-  double lr=m_system->getLearningRate();
 
   string filename=folderpart1+"N="+to_string(parti)+"D="+to_string(dimen);
   string filenametime=folderpart1+"time/"+"N="+to_string(parti)+"D="+to_string(dimen)+"new";
@@ -283,8 +281,6 @@ void Sampler::writeToFiles_distribution(){
 
   folderpart1 ="Results/"+interaction_part+"/distribution_investigation/"+distribution_part+"/";
 
-  int parti= m_system->getNumberOfParticles();
-  int dimen= m_system->getNumberOfDimensions();
   int HN= m_system->getNumberOfHN();
   double lr=m_system->getLearningRate();
   double init=m_system->getInitialization();
@@ -307,7 +303,6 @@ void Sampler::writeToFiles_distribution(){
 void Sampler::writeToFile_lr_nodes(){
   ofstream myfile_energy, myfile_specs;
   string folderpart1, method, interaction_part;
-  double step_value;
   int sample_method=m_system->getSampleMethod();
 
   if(m_system->getInteraction()){
@@ -319,11 +314,9 @@ void Sampler::writeToFile_lr_nodes(){
 
   if (sample_method==0){
     method="bruteforce";
-    step_value=m_system->getStepLength();
   }
   else if (sample_method==1){
     method="importance";
-    step_value=m_system->getTimeStep();
   }
   else{
     method="gibbs";
@@ -354,41 +347,4 @@ void Sampler::writeToFile_lr_nodes(){
   
   cout << "Done!"<<endl;
   cout<<endl;
-
-
 }
-
-
-
-/*
-
-//Step sizes and time steps written to file
-void Sampler::writeToFileSteps(vector<int> steps_list, vector<double> meanEL_list){
-  ofstream myfile4;
-  string folderpart1, folderpart2;
-  
-  if (m_system->getBruteforce()==true){
-    folderpart1="Results/steps/bruteforce/";
-    folderpart2="steplength"+to_string(m_system->getStepLength());
-  }
-  else {
-    folderpart1 ="Results/steps/importancesampling/";
-    folderpart2="timestep"+to_string(m_system->getTimeStep());
-  }
-
-  int parti= m_system->getNumberOfParticles();
-  int dimen= m_system->getNumberOfDimensions();
-
-  string filename=folderpart1+folderpart2+"N"+to_string(parti)+"Dim"+to_string(dimen)+".txt";
-  myfile4.open(filename);
-  cout << "Steps and energies are being written to file.."<<endl;
-  for(int i=0; i<steps_list.size(); i++){
-      myfile4<<steps_list[i]<<" "<<meanEL_list[i]<<endl;
-  }
-  cout << "Done!"<<endl;
-  cout<<endl;
-
-  myfile4.close();
-
-}
-*/

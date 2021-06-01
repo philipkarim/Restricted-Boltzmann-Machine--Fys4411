@@ -12,8 +12,6 @@ public:
     double computeInteractingEnergy(arma:: vec X_visible);
     arma::vec computeParameterDerivatives();
 
-
-
 private:
     double m_omega = 0;
 

@@ -12,8 +12,7 @@ using namespace arma;
 HarmonicOscillator::HarmonicOscillator(System* system, double omega) :
     Hamiltonian(system) {
     assert(omega   > 0);
-    m_omega  = omega;
-    
+    m_omega  = omega;   
 }
 
 double HarmonicOscillator::computeLocalEnergy() {
@@ -53,6 +52,7 @@ double HarmonicOscillator::computePotentialEnergy(vec X_visible) {
 double HarmonicOscillator::computeKineticEnergy(vec X_visible){
   double double_derivative, derivative;
   if(m_system->getSampleMethod()==2){
+    //Gibbs wavefunction has a bit different energy derivate than the two others
     double_derivative=0.5*m_system->getWaveFunction()->computeDoubleDerivative();
     derivative       =0.5*m_system->getWaveFunction()->computeDerivative(X_visible);
   }
@@ -71,6 +71,7 @@ double HarmonicOscillator::computeInteractingEnergy( vec X_visible){
   double interactingEnergy2, product_term;
   double norm = 0;
 
+  //Interacting term, looping through the particles keeping the different dimensions in mind
   for (int i=1; i<m_system->getNumberOfParticles(); i++){
     for (int j=0; j<i; j++){
       for (int dim=0; dim<dimension; dim++){
@@ -84,8 +85,8 @@ double HarmonicOscillator::computeInteractingEnergy( vec X_visible){
 }
 
 
-//Computes the derivative with respect to the different parameters, to be used in SGD
 vec HarmonicOscillator::computeParameterDerivatives(){
+//Computes the derivative with respect to the different parameters, need this for SGD
     //Defining some variables
     int numberOfVN = m_system->getNumberOfVN();
     int numberOfHN = m_system->getNumberOfHN();
@@ -120,6 +121,7 @@ vec HarmonicOscillator::computeParameterDerivatives(){
             k++;
         }
     }
+    //Uses a bit different derivative of parameters when using gibbs sampling
     if(m_system->getSampleMethod()==2){
       return derivate_parameter_vec*0.5;
     }

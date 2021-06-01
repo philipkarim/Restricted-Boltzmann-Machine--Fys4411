@@ -16,7 +16,7 @@ using namespace std;
 
 //Just a function used when investigating learning rates and the number of hiden nodes
 void learning_rate_and_nodes(int lr_part, int lr_dim, double learning_rate, int h_node, double lr_sigma, double step_val, bool interacting_lrn, int solver){
-          System* system = new System(2021);
+          System* system = new System();
           system->setHamiltonian              (new HarmonicOscillator(system, 1.0));
           system->setWaveFunction             (new NeuralState(system, lr_part, lr_dim, lr_sigma));
           system->setInitialState             (new RandomUniform(system, h_node, lr_part*lr_dim,false, 0.001)); 
@@ -26,39 +26,38 @@ void learning_rate_and_nodes(int lr_part, int lr_dim, double learning_rate, int 
           system->setEquilibrationFraction    (0.2);
           system->setSampleMethod             (solver);
           system->setInteraction              (interacting_lrn);
-          system->setWtfLrNodes               (false);
-          system->setgeneralwtf               (true);
-          system->runBoltzmannMachine         (100, (int) pow(2,20));
+          system->setWtfLrNodes               (true);
+          system->setgeneralwtf               (false);
+          system->runBoltzmannMachine         (40, (int) pow(2,18));
 }
 int main() {
-
-    // Seed for the random number generator
-    int seed = 2021;
 
     int numberOfSteps       = (int) pow(2,20); //Amount of metropolis steps
     int cycles_RBM          = 100;
     int numberOfDimensions  = 1;            // Set amount of dimensions
     int numberOfParticles   = 1;            // Set amount of particles
-    int hidden_nodes        = 2;
+    int hidden_nodes        = 2;            // Set amount of hidden nodes
     int visible_nodes       = numberOfDimensions*numberOfParticles;
     int sampler_method      = 0;            //0=BF, 1=IS, 2=GS
-    bool uniform_distr      = false;         //Normal=false, Uniform=true
+    bool uniform_distr      = false;        //Normal=false, Uniform=true
     double omega            = 1.0;          // Oscillator frequency.
     double stepLength       = 0.5;          // Metropolis step length.
-    double timeStep         = 0.4;         // Metropolis time step (Importance sampling)
+    double timeStep         = 0.4;          // Metropolis time step (Importance sampling)
     double equilibration    = 0.2;          // Amount of the total steps used for equilibration.
     bool interaction        = false;        // True-> interaction, False->Not interaction
-    double sigma_val        = 1;
-    double initialization   = 0.001;
-    double learningRate     = 0.001;
+    double sigma_val        = 1;            //Value of sigma
+    double initialization   = 0.001;        //Initialisation values of the distributions 
+    double learningRate     = 0.001;        //Learning rate
     
-    //Write to file
-    bool generalwtf        =true;          // General information- write to file
-    bool explore_distribution=false;
-    bool find_optimal_step =false;
-    bool nodes_lr          =false;
+    //Write to file, these values decides
+    //which part of the investigation is going
+    //to be written to file
+    bool generalwtf        =false;          // Final results
+    bool explore_distribution=false;        // Different distributions
+    bool find_optimal_step =false;          //Investigating the step sizes and time steps
+    bool nodes_lr          =false;          //Computing various values of hidden nodes vs learning rate
 
-    System* system = new System(seed);
+    System* system = new System();
     system->setHamiltonian              (new HarmonicOscillator(system, omega));
     system->setWaveFunction             (new NeuralState(system, numberOfParticles, numberOfDimensions, sigma_val));
     system->setInitialState             (new RandomUniform(system, hidden_nodes, visible_nodes, uniform_distr, initialization));
@@ -70,6 +69,8 @@ int main() {
     system->setInteraction              (interaction);
     system->setgeneralwtf               (generalwtf);
     
+
+    //From here on it is just various simulations ready to run in parallel
     if(explore_distribution==true){
       int pid, pid1, pid2, pid3, pid4, pid5, pid6;
       //Using more cores to achieve more results faster
@@ -284,8 +285,8 @@ int main() {
             learning_rate_and_nodes(2, 2, lr_gibbs_int, node_gibbs_int, 0.7, 0.5, true, 2);
         }}} }}}}}
     
-    //This one is a bit overkill, since it runs on 12 cores,
-    //but be sure that you got enough cores on the computer before running
+    //This one is a bit overkill, since it runs on 12 cores, 
+    //so be sure that the computer doing this specific part is ran on a computer with 12 cores
     else if(generalwtf==true){
       //Testing for various learning rates and nodes
       int pid, pid1, pid2, pid3, pid4, pid5, pid6, pid7, pid8, pid9, pid10;
@@ -345,11 +346,3 @@ int main() {
     }
     return 0;
 }
-
-
-
-/*
-For compilers to find openblas you may need to set:
-  export LDFLAGS="-L/usr/local/opt/openblas/lib"
-  export CPPFLAGS="-I/usr/local/opt/openblas/include"
-*/
