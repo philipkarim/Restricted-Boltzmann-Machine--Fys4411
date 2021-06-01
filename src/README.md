@@ -24,7 +24,7 @@ cmake ../
 make -j2
 
 # Move the executable to the top-directory
-mv vmc ..
+mv rbm ..
 ```
 Or, simply run the script `compile_project` via
 ```bash
