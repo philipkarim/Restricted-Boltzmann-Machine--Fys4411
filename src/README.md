@@ -32,7 +32,7 @@ Or, simply run the script `compile_project` via
 ```
 and the same set of commands are done for you. Now the project can be run by executing
 ```bash
-./vmc
+./rbm
 ```
 in the top-directory.
 
